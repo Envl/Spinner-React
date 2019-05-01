@@ -53,10 +53,14 @@ run
 npm run build
 ```
 
-## server
+## serve
 
 run
 
 ```bash
 npm start
 ```
+
+## validate
+
+go through the aforementioned process, and go to `localhost:3000/world`, you should see _Hello World_.
