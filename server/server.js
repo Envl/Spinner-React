@@ -6,7 +6,7 @@ import path from 'path'
 
 SourceMapSupport.install()
 const app = express()
-app.use(express.static('/static'))
+app.use(express.static('static'))
 app.use(bodyParser.json())
 app.use(cors())
 
@@ -15,9 +15,10 @@ app.listen(3000, () => {
 })
 
 app.get('/api/test', (req, res) => {
-  console.log('got')
+  console.log('got it')
   res.json({ message: 'ok' })
 })
+
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve('static/index.html'))
+  res.sendFile(path.resolve('./static/index.html'))
 })

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
 class app extends React.Component {
   constructor(props) {
@@ -18,7 +19,22 @@ class app extends React.Component {
   }
 
   render() {
-    return <h1>Hello World!</h1>
+    return (
+      <BrowserRouter>
+        <Switch>
+          <Route path='/' exact render={props => <h1>Hello!</h1>} />
+          <Route
+            path='/:sth'
+            render={props => (
+              <div {...props}>
+                {' '}
+                <h1>hello {props.match.params.sth} </h1>
+              </div>
+            )}
+          />
+        </Switch>
+      </BrowserRouter>
+    )
   }
 }
 
