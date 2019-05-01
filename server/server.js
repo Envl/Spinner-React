@@ -15,8 +15,8 @@ app.listen(3000, () => {
 })
 
 app.get('/api/test', (req, res) => {
-  console.log('got it')
-  res.json({ message: 'ok' })
+  console.log('got it!')
+  res.json({ message: 'ok!' })
 })
 
 app.get('*', (req, res) => {

@@ -28,7 +28,7 @@ class app extends React.Component {
             render={props => (
               <div {...props}>
                 {' '}
-                <h1>hello {props.match.params.sth} </h1>
+                <h1>hello {props.match.params.sth} !</h1>
               </div>
             )}
           />
