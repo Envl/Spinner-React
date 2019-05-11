@@ -20,9 +20,8 @@ const History = props => {
         rsl.forEach(e => {
           msgs.push(e.data());
         });
-        return msgs;
-      })
-      .then(msgs => setMsgs(msgs));
+        setMsgs(msgs);
+      });
   }, []);
   console.log(msgs);
 
