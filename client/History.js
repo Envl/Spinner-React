@@ -1,4 +1,5 @@
 import {withFirebase} from './firebase';
+import React, {useState, useEffect} from 'react';
 
 // const [error, setError] = useState(null);
 //   console.log(error);
@@ -9,14 +10,22 @@ import {withFirebase} from './firebase';
 //   }, []);
 
 const History = props => {
-  props.firebase.db
-    .collection('items')
-    .get()
-    .then(rsl =>
-      rsl.forEach(e => {
-        console.log(e.data());
+  const [msgs, setMsgs] = useState([]);
+  useEffect(() => {
+    props.firebase.db
+      .collection('items')
+      .get()
+      .then(rsl => {
+        let msgs = [];
+        rsl.forEach(e => {
+          msgs.push(e.data());
+        });
+        return msgs;
       })
-    );
+      .then(msgs => setMsgs(msgs));
+  }, []);
+  console.log(msgs);
+
   return 'hi';
 };
 
