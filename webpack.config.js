@@ -1,10 +1,10 @@
-const webpack = require('webpack') // eslint-disable-line
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const path = require('path')
+const webpack = require('webpack'); // eslint-disable-line
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
-const outputDirectory = path.join(__dirname, 'static')
-const indexpath = path.join(__dirname, 'client', 'index.js')
-const entries = ['babel-polyfill', indexpath]
+const outputDirectory = path.join(__dirname, 'static');
+const indexpath = path.join(__dirname, 'client', 'index.js');
+const entries = ['babel-polyfill', indexpath];
 
 module.exports = {
   entry: entries,
@@ -12,7 +12,7 @@ module.exports = {
     path: outputDirectory,
     filename: '[name].bundle.js',
     chunkFilename: '[name].js',
-    publicPath: '/',
+    publicPath: '/'
   },
   devtool: 'source-map',
   devServer: {
@@ -20,13 +20,13 @@ module.exports = {
     contentBase: 'static',
     proxy: {
       '/api/*': {
-        target: 'http://localhost:3000',
-      },
+        target: 'http://localhost:3000'
+      }
     },
     historyApiFallback: true,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   optimization: {
     splitChunks: {
@@ -39,10 +39,10 @@ module.exports = {
           chunks: 'all',
           name: 'vendor',
           // import file path containing node_modules
-          test: /node_modules/,
-        },
-      },
-    },
+          test: /node_modules/
+        }
+      }
+    }
   },
   module: {
     rules: [
@@ -50,26 +50,30 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+          loader: 'babel-loader'
+        }
       },
       {
         test: /\.(ttf|eot|svg|gif|jpg|png)(\?[\s\S]+)?$/,
         exclude: /node_modules/,
-        use: 'file-loader',
+        use: 'file-loader'
       },
-    ],
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ['*', '.js', '.jsx']
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'client', 'index.html'),
-    }),
-  ],
-}
+      template: path.join(__dirname, 'client', 'index.html')
+    })
+  ]
+};

@@ -1,5 +1,5 @@
-import { withFirebase } from './firebase'
-import React, { useState, useEffect } from 'react'
+import {withFirebase} from './firebase'
+import React, {useState, useEffect} from 'react'
 
 const History = props => {
   const [msgs, setMsgs] = useState([])
@@ -12,9 +12,8 @@ const History = props => {
         rsl.forEach(e => {
           msgs.push(e.data())
         })
-        return msgs
+        setMsgs(msgs)
       })
-      .then(msgs => setMsgs(msgs))
   }, [])
   console.log(msgs)
 
