@@ -15,7 +15,7 @@ const ProductGridItem = ({item, onRequest}) => {
       </a>
       <span className="label label-warning">New</span>
       <span className="product-description">{description}</span>
-      <button className="btn btn-add" onClick={() => onRequest(item.id)}>
+      <button className="btn btn-add" onClick={() => onRequest(item)}>
         Request
       </button>
     </div>
