@@ -1,31 +1,30 @@
-import React from 'react';
-import {Switch, Route, BrowserRouter} from 'react-router-dom';
-import HistoryPage from './History';
+import React from 'react'
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
+import HistoryPage from './components/History'
+import Products from './components/Products'
+import Signup from './components/Signup'
+import Upload from './components/Upload'
+import { withFirebase } from './components/firebase'
+import { ROUTES } from './constants'
 
-class app extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={HistoryPage} />
-          <Route
-            path="/:sth"
-            render={props => (
-              <div {...props}>
-                {' '}
-                <h1>hello {props.match.params.sth} !</h1>
-              </div>
-            )}
-          />
-          <Route path="/upload" />
-        </Switch>
-      </BrowserRouter>
-    );
-  }
+const app = ({ firebase }) => {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path={ROUTES.home} exact component={HistoryPage} />
+        <Route path={ROUTES.signup} render={props => <Signup {...props} />} />
+        <Route path={ROUTES.items} component={Products} />
+        <Route
+          path={ROUTES.upload}
+          render={props => {
+            const loggedin = firebase.currentUser
+            if (loggedin) return <Upload {...props} />
+            else return <Redirect to={{ pathname: ROUTES.signup }} />
+          }}
+        />
+      </Switch>
+    </BrowserRouter>
+  )
 }
 
-export default app;
+export default withFirebase(app)
