@@ -1,6 +1,6 @@
 import {withFirebase} from './firebase'
 import React, {useState, useEffect} from 'react'
-import ProductGridItem from './ProductGridItem'
+import ProductGridItem from './ItemGrid'
 import {Link} from 'react-router-dom'
 import {TRANSAC_API, ROUTES} from '../constants'
 

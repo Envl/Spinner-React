@@ -1,7 +1,7 @@
 import React from 'react'
 import {Switch, Route, BrowserRouter, Redirect} from 'react-router-dom'
 import HistoryPage from './components/History'
-import Products from './components/Products'
+import Products from './components/Items'
 import Signup from './components/Signup'
 import Upload from './components/Upload'
 import {withFirebase} from './components/firebase'
