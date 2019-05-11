@@ -1,32 +1,24 @@
-import {withFirebase} from './firebase';
-import React, {useState, useEffect} from 'react';
-
-// const [error, setError] = useState(null);
-//   console.log(error);
-//   setError('new error');
-
-//   useEffect(() => {
-//     fetchSignInMethods();
-//   }, []);
+import { withFirebase } from './firebase'
+import React, { useState, useEffect } from 'react'
 
 const History = props => {
-  const [msgs, setMsgs] = useState([]);
+  const [msgs, setMsgs] = useState([])
   useEffect(() => {
     props.firebase.db
       .collection('items')
       .get()
       .then(rsl => {
-        let msgs = [];
+        let msgs = []
         rsl.forEach(e => {
-          msgs.push(e.data());
-        });
-        return msgs;
+          msgs.push(e.data())
+        })
+        return msgs
       })
-      .then(msgs => setMsgs(msgs));
-  }, []);
-  console.log(msgs);
+      .then(msgs => setMsgs(msgs))
+  }, [])
+  console.log(msgs)
 
-  return 'hi';
-};
+  return 'hi'
+}
 
-export default withFirebase(History);
+export default withFirebase(History)

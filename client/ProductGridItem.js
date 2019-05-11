@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { withFirebase } from './firebase'
+import React from 'react'
 
 const ProductGridItem = ({ item }) => {
   const { title, price, description, photoUrls } = item
@@ -41,4 +40,4 @@ const ProductGridItem = ({ item }) => {
   )
 }
 
-export default withFirebase(ProductGridItem)
+export default ProductGridItem

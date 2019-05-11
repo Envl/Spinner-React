@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
 import HistoryPage from './History'
-import Upload from './Upload'
+import Products from './Products'
 
 class app extends React.Component {
   constructor(props) {
