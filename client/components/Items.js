@@ -1,10 +1,10 @@
 import {withFirebase} from './firebase'
 import React, {useState, useEffect} from 'react'
-import ProductGridItem from './ItemGrid'
+import ItemGrid from './ItemGrid'
 import {Link} from 'react-router-dom'
-import {TRANSAC_API, ROUTES} from '../constants'
+import {ROUTES} from '../constants'
 
-const Products = props => {
+const Items = props => {
   const [items, setItems] = useState([])
   useEffect(() => {
     props.firebase.db
@@ -56,10 +56,13 @@ const Products = props => {
   return (
     <div className="product-page">
       {items.map(item => (
-        <ProductGridItem item={item} key={item.id} onRequest={onRequest} />
+        <ItemGrid item={item} key={item.id} onRequest={onRequest} />
       ))}
+      <a href="/upload" className="btn btn-add">
+        Upload
+      </a>
     </div>
   )
 }
 
-export default withFirebase(Products)
+export default withFirebase(Items)

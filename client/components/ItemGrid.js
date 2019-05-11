@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ProductGridItem = ({item, onRequest}) => {
+const Item = ({item, onRequest}) => {
   const {title, price, description, photoUrls} = item
   return (
     <div className="product-item">
@@ -22,4 +22,4 @@ const ProductGridItem = ({item, onRequest}) => {
   )
 }
 
-export default ProductGridItem
+export default Item
