@@ -1,7 +1,7 @@
-import { withFirebase } from './firebase'
-import React, { useState, useEffect } from 'react'
+import {withFirebase} from './firebase'
+import React, {useState, useEffect} from 'react'
 import ProductGridItem from './ProductGridItem'
-// import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 const Products = props => {
   const [items, setItems] = useState([])
@@ -12,7 +12,7 @@ const Products = props => {
       .then(rsl => {
         let itemArr = []
         rsl.forEach(e => {
-          itemArr.push(e.data())
+          itemArr.push(Object.assign(e.data(), {id: e.id}))
         })
         setItems(itemArr)
       })
@@ -21,7 +21,17 @@ const Products = props => {
       })
   }, [])
 
-  return items.map(item => <ProductGridItem item={item} key={Math.random()} />)
+  const onRequest = id => {
+    // fetch()
+  }
+
+  return (
+    <div className="product-page">
+      {items.map(item => (
+        <ProductGridItem item={item} key={item.id} onRequest={onRequest} />
+      ))}
+    </div>
+  )
 }
 
 export default withFirebase(Products)

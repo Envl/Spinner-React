@@ -12,7 +12,8 @@ const UploadPage = ({ history, firebase }) => {
   const [photoUrls, setImgUrls] = useState([])
   const [uploadProgress, setUploadProgress] = useState(0)
 
-  const handleItemUploadSubmit = () => {
+  const handleItemUploadSubmit = event => {
+    event.preventDefault()
     fetch(ITEM_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -71,7 +72,7 @@ const UploadPage = ({ history, firebase }) => {
         value={price}
         onChange={event => {
           const input = event.target.value
-          if (/\d+/.test(input)) {
+          if (/^\d+$/.test(input)) {
             setItemPrice(event.target.value)
           }
         }}
