@@ -1,27 +1,30 @@
 import React, { useState } from 'react'
 import { withFirebase } from './firebase'
-import { responseHandler } from '../utilities'
-import { AUTH_API } from '../constants'
 import { ROUTES } from '../constants'
 
 const SignUp = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  //   const [username, setUsername] = useState('')
 
   const { firebase, history } = props
   const handleSignUpSubmit = () => {
-    fetch(AUTH_API, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    })
-      .then(responseHandler)
+    firebase.auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(authUser =>
+        firebase.user(authUser.user.uid).set(
+          {
+            email,
+            // username: username,
+            id: authUser.user.uid,
+            transactions: [],
+            items: [],
+          },
+          { merge: true },
+        ),
+      )
       .then(() => {
-        firebase.auth.createUserWithEmailAndPassword(email, password)
-        console.log('ok')
+        history.push(ROUTES.items)
       })
       .catch(error => {
         console.log(`${error.message}`)
@@ -36,29 +39,42 @@ const SignUp = props => {
       })
       .then(res => {
         console.log(res)
-        // history.push('/products')
         history.push(ROUTES.items)
       })
   }
 
   return (
     <div className='sign-up-form-group'>
+      <label htmlFor='email'>Email </label>
       <input
         id='register-email-input'
         type='text'
+        name='email'
         value={email}
-        className='form-control'
         placeholder='Email: *'
         onChange={event => {
           event.preventDefault()
           setEmail(event.target.value)
         }}
       />
+      {/* <label htmlFor='password'>Username</label>
+      <input
+        id='register-username-input'
+        type='text'
+        name='username'
+        value={username}
+        placeholder='Username'
+        onChange={event => {
+          event.preventDefault()
+          setUsername(event.target.value)
+        }}
+      /> */}
+      <label htmlFor='password'>Password</label>
       <input
         id='register-password-input'
+        name='password'
         type='password'
         value={password}
-        className='form-control'
         placeholder='Password'
         onChange={event => {
           event.preventDefault()
