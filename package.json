@@ -3,12 +3,8 @@
   "version": "1.0.0",
   "description": "The discription",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "start": "node dist/server.generated.js",
-    "client": "webpack-dev-server --hot --inline --devtool inline-source-map ",
-    "server": "nodemon",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "client": "webpack-dev-server --hot --inline --devtool inline-source-map "
   },
   "author": "Zhongyuan Jin <nanomalloc@gmail.com>",
   "license": "MIT",
@@ -19,8 +15,6 @@
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "concurrently": "^4.0.0",
-    "nodemon": "^1.18.10",
     "react": "^16.8.3",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.2.3",
@@ -30,13 +24,11 @@
     "css-loader": "^2.0.0"
   },
   "dependencies": {
-    "express": "^4.16.4",
-    "webpack-node-externals": "1.7.2",
-    "cors": "^2.8.5",
+    "babel-polyfill": "^6.26.0",
+    "firebase": "^6.0.2",
     "lodash": "^4.17.11",
     "react-dom": "^16.8.1",
-    "source-map-support": "^0.5.10",
     "react-router-dom": "^5.0.0",
-    "babel-polyfill": "^6.26.0"
+    "source-map-support": "^0.5.10"
   }
 }
