@@ -1,6 +1,6 @@
-import { withFirebase } from './components/firebase'
+import { withFirebase } from './firebase'
 import React, { useState, useEffect } from 'react'
-import ProductGridItem from './components/ProductGridItem'
+import ProductGridItem from './ProductGridItem'
 import { Link } from 'react-router-dom'
 
 const Products = props => {
