@@ -1,0 +1,41 @@
+.product-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 360px;
+  height: 420px;
+  border: solid 2px #d8d8d8;
+  margin: -2px -2px 0 0;
+  .label {
+    position: relative;
+    display: none;
+  }
+
+  .text-info {
+    height: 70px;
+    .title {
+      margin: 5px 0;
+    }
+  }
+}
+
+.product-img {
+  > img {
+    object-fit: cover;
+    width: 360px;
+  }
+}
+
+.label-warning {
+  padding: 3px 5px;
+  background: #f3b631;
+  color: white;
+  border-radius: 3px;
+}
+
+.btn-add {
+  position: relative;
+  align-self: flex-end;
+  top: 0px;
+  right: 10px;
+}
