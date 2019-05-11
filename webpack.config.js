@@ -57,6 +57,11 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(ttf|eot|svg|gif|jpg|png)(\?[\s\S]+)?$/,
+        exclude: /node_modules/,
+        use: 'file-loader',
+      },
     ],
   },
   resolve: {
