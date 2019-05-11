@@ -19,10 +19,11 @@ class Firebase {
       localStorage.setItem('currentUser', JSON.stringify(authUser))
       this.attachAuth(authUser)
     })
-
+    this.attachAuth = this.attachAuth.bind(this)
     this.db = app.firestore()
     this.storage = app.storage
-    this.attachAuth = this.attachAuth.bind(this)
+
+    this.user = uid => app.firestore().doc(`users/${uid}`)
   }
 
   attachAuth(authUser) {

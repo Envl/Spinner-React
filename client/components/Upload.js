@@ -22,6 +22,7 @@ const UploadPage = ({ history, firebase }) => {
         title,
         description,
         photoUrls,
+        ownerId: firebase.auth.currentUser.uid,
       }),
     })
       .then(rst => {
