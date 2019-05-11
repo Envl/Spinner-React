@@ -13,6 +13,7 @@ class app extends React.Component {
       <BrowserRouter>
         <Switch>
           <Route path='/' exact component={HistoryPage} />
+          <Route path='/products' component={Products} />
           <Route path='/upload' render={props => <Upload {...props} />} />
         </Switch>
       </BrowserRouter>
