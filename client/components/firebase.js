@@ -15,9 +15,9 @@ class Firebase {
       this.currentUser = usr
     }
     app.auth().onAuthStateChanged(authUser => {
+      console.log(authUser, 'asdad')
       localStorage.setItem('currentUser', JSON.stringify(authUser))
       this.attachAuth(authUser)
-      console.log(authUser)
     })
 
     this.db = app.firestore()
