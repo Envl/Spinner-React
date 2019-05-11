@@ -36,7 +36,6 @@ const SignUp = props => {
       })
       .then(res => {
         console.log(res)
-        // history.push('/products')
         history.push(ROUTES.items)
       })
   }

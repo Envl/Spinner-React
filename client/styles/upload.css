@@ -1,0 +1,21 @@
+#upload-label {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 33px;
+}
+
+body {
+  display: flex !important;
+  justify-content: center;
+  width: 100%;
+}
+body > form > * {
+  width: 300px;
+  margin: 5px;
+  padding: 5px;
+  border: none;
+}
+
+textarea {
+  height: 120px;
+}

@@ -5,5 +5,6 @@ const ROUTES = {
   signup: '/signup',
 }
 const AUTH_API = 'https://us-central1-spinner-stuff.cloudfunctions.net/api_user'
+const ITEM_API = 'https://us-central1-spinner-stuff.cloudfunctions.net/api_item'
 
-export { ROUTES, AUTH_API }
+export { ROUTES, AUTH_API, ITEM_API }
