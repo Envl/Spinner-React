@@ -7,18 +7,28 @@ import Upload from './components/Upload'
 import {withFirebase} from './components/firebase'
 import {ROUTES} from './constants'
 
-const app = ({firebase}) => {
+const app = props => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path={ROUTES.home} exact render={() => <Items {...props} />} />
-        <Route path={ROUTES.signup} render={props => <Signup {...props} />} />
-        <Route path={ROUTES.items} component={Items} />
+        <Route
+          path={ROUTES.home}
+          exact
+          render={localProps => <Items {...localProps} />}
+        />
+        <Route
+          path={ROUTES.signup}
+          render={localProps => <Signup {...localProps} />}
+        />
+        <Route
+          path={ROUTES.items}
+          render={localProps => <Items {...localProps} />}
+        />
         <Route
           path={ROUTES.upload}
-          render={props => {
-            const loggedin = firebase.currentUser
-            if (loggedin) return <Upload {...props} />
+          render={localProps => {
+            const loggedin = props.firebase && props.firebase.currentUser
+            if (loggedin) return <Upload {...localProps} />
             else return <Redirect to={{pathname: ROUTES.signup}} />
           }}
         />

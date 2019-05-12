@@ -15,7 +15,7 @@ const Item = ({item, onRequest}) => {
       </a>
       <span className="label label-warning">New</span>
       <span className="product-description">{description}</span>
-      <button className="btn btn-add" onClick={() => onRequest(item)}>
+      <button className="btn btn-request" onClick={() => onRequest(item)}>
         Request
       </button>
     </div>

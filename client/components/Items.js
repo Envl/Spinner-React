@@ -2,7 +2,7 @@ import {withFirebase} from './firebase'
 import React, {useState, useEffect} from 'react'
 import ItemGrid from './ItemGrid'
 import {Link} from 'react-router-dom'
-import {ROUTES} from '../constants'
+import {ROUTES, TRANSAC_API} from '../constants'
 
 const Items = props => {
   const [items, setItems] = useState([])
@@ -27,12 +27,14 @@ const Items = props => {
       props.history.push(ROUTES.signup)
       return
     }
-    fetch(TRANSAC_API, {
+    fetch(TRANSAC_API + '?id=' + item.id + props.firebase.currentUser.uid, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         consumerId: props.firebase.currentUser.uid,
-        providerId: '',
+        providerId: item.ownerId,
         itemId: item.id,
         item,
         status: 'waiting',
@@ -40,23 +42,37 @@ const Items = props => {
       })
     })
       .then(rst => {
-        console.log('result', rst)
         if (rst.ok) {
-          console.log('success', rst.id)
           return rst.json()
         }
       })
       .then(data => {
         console.log(data)
-        // props.firebase.user()
       })
       .catch(err => console.log('failed', err))
+    console.log('me', props.firebase.currentUser.uid, 'you', item.ownerId)
+
+    props.firebase.user(props.firebase.currentUser.uid).update({
+      transactions: props.firebase.app.firestore.FieldValue.arrayUnion(
+        item.id + props.firebase.currentUser.uid
+      )
+    })
+    props.firebase.user(item.ownerId).update({
+      transactions: props.firebase.app.firestore.FieldValue.arrayUnion(
+        item.id + props.firebase.currentUser.uid
+      )
+    })
   }
 
   return (
     <div className="product-page">
-      {items.map(item => (
-        <ItemGrid item={item} key={item.id} onRequest={onRequest} />
+      {items.map(item => {
+        console.log('item', item)
+
+        return <ItemGrid item={item} key={item.id} onRequest={onRequest} />
+      })}
+      {[1, 2, 3, 4].map(() => (
+        <div className="zero-height product-item" key={Math.random()} />
       ))}
       <a href="/upload" className="btn btn-add">
         Upload

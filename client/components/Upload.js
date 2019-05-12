@@ -13,6 +13,9 @@ const UploadPage = ({history, firebase}) => {
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
+    if (!(uploadProgress === 100)) {
+      return
+    }
     fetch(ITEM_API, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -50,7 +53,7 @@ const UploadPage = ({history, firebase}) => {
 
   const renderProgress = () => {
     if (uploadProgress === 0) return null
-    else if (uploadProgress == 100) return <h5>done</h5>
+    else if (uploadProgress == 100) return <h5>Image Uploaded</h5>
     else return <h5>Uploading ... {uploadProgress} % ... </h5>
   }
 
@@ -62,6 +65,7 @@ const UploadPage = ({history, firebase}) => {
       <input
         type="text"
         name="title"
+        placeholder="Title*"
         required
         value={title}
         onChange={event => {
@@ -69,26 +73,24 @@ const UploadPage = ({history, firebase}) => {
         }}
       />
       <input
-        type="text"
+        type="number"
         name="price"
+        placeholder="Price*"
         required
         value={price}
         onChange={event => {
-          const input = event.target.value
-          if (/^\d+$/.test(input)) {
-            setItemPrice(event.target.value)
-          }
+          event.target.value >= 0 && setItemPrice(event.target.value)
         }}
       />
       <textarea
         name="description"
+        placeholder="Description*"
         value={description}
         required
         onChange={event => {
           setItemDescription(event.target.value)
         }}
       />
-      Description
       <input
         type="file"
         name="upload-img"
@@ -98,7 +100,14 @@ const UploadPage = ({history, firebase}) => {
       />
       <label htmlFor="upload-img" id="upload-label" />
       {renderProgress()}
-      <button type="submit" id="upload-btn">
+      <button
+        type="submit"
+        className="upload-btn btn"
+        // disabled={!(uploadProgress === 100)}
+        // onClick={evt => {
+
+        // }}
+      >
         Publish
       </button>
     </form>

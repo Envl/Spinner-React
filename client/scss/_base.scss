@@ -1,0 +1,28 @@
+body {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+input,
+textarea {
+  border: 1px solid $gray;
+  border-radius: 6px;
+  transition: box-shadow 0.08s ease-in, color 0.08s ease-in;
+  box-shadow: 0 0 0 1px $gray;
+  height: 30px;
+  margin: 5px 0;
+  padding: 2px 5px;
+  width: 100%;
+  &:focus,
+  &:active {
+    z-index: 2;
+    outline: none;
+    box-shadow: $box-shadow;
+  }
+}
+
+.zero-height {
+  height: 0 !important;
+  border: none !important;
+}
