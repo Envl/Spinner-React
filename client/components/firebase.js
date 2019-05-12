@@ -16,6 +16,7 @@ class Firebase {
     this.db = app.firestore()
     this.storage = app.storage
     this.user = uid => app.firestore().doc(`users/${uid}`)
+    this.transaction = id => app.firestore().doc(`transactions/${id}`)
 
     const usr = JSON.parse(localStorage.getItem('currentUser'))
     if (usr) {
