@@ -1,6 +1,14 @@
+// variables
 @import 'mixins';
 @import 'colors';
 
+//components
 @import 'buttons';
+
+//base
+@import 'base';
+
+// pages
+@import 'upload';
 @import 'productItem';
 @import 'productPage';

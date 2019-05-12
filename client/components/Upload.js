@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { withFirebase } from './firebase'
-import '../styles/upload.css'
+import React, {useState, useEffect} from 'react'
+import {withFirebase} from './firebase'
 import '../constants'
-import { ITEM_API, ROUTES } from '../constants'
-import { uploadPictureToFirebase } from '../utilities'
+import {ITEM_API, ROUTES} from '../constants'
+import {uploadPictureToFirebase} from '../utilities'
 
-const UploadPage = ({ history, firebase }) => {
+const UploadPage = ({history, firebase}) => {
   const [title, setItemTitle] = useState('')
   const [price, setItemPrice] = useState('')
   const [description, setItemDescription] = useState('')
@@ -14,16 +13,19 @@ const UploadPage = ({ history, firebase }) => {
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
+    if (!(uploadProgress === 100)) {
+      return
+    }
     fetch(ITEM_API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         price,
         title,
         description,
         photoUrls,
-        ownerId: firebase.auth.currentUser.uid,
-      }),
+        ownerId: firebase.auth.currentUser.uid
+      })
     })
       .then(rst => {
         console.log('result', rst)
@@ -45,21 +47,25 @@ const UploadPage = ({ history, firebase }) => {
       },
       status => {
         setUploadProgress(status * 100)
-      },
+      }
     )
   }
 
   const renderProgress = () => {
     if (uploadProgress === 0) return null
-    else if (uploadProgress == 100) return <h5>done</h5>
+    else if (uploadProgress == 100) return <h5>Image Uploaded</h5>
     else return <h5>Uploading ... {uploadProgress} % ... </h5>
   }
 
   return (
-    <form action='upload' className='upload-form'>
+    <form
+      action="upload"
+      className="upload-form"
+      onSubmit={handleItemUploadSubmit}>
       <input
-        type='text'
-        name='title'
+        type="text"
+        name="title"
+        placeholder="Title*"
         required
         value={title}
         onChange={event => {
@@ -67,29 +73,41 @@ const UploadPage = ({ history, firebase }) => {
         }}
       />
       <input
-        type='text'
-        name='price'
+        type="number"
+        name="price"
+        placeholder="Price*"
         required
         value={price}
         onChange={event => {
-          const input = event.target.value
-          if (/^\d+$/.test(input)) {
-            setItemPrice(event.target.value)
-          }
+          event.target.value >= 0 && setItemPrice(event.target.value)
         }}
       />
       <textarea
-        name='description'
+        name="description"
+        placeholder="Description*"
         value={description}
+        required
         onChange={event => {
           setItemDescription(event.target.value)
         }}
       />
-      Description
-      <input type='file' name='upload-img' id='upload-img' required onChange={handleImageUpload} />
-      <label htmlFor='upload-img' id='upload-label' />
+      <input
+        type="file"
+        name="upload-img"
+        id="upload-img"
+        required
+        onChange={handleImageUpload}
+      />
+      <label htmlFor="upload-img" id="upload-label" />
       {renderProgress()}
-      <button type='submit' id='upload-btn' onClick={handleItemUploadSubmit}>
+      <button
+        type="submit"
+        className="upload-btn btn"
+        // disabled={!(uploadProgress === 100)}
+        // onClick={evt => {
+
+        // }}
+      >
         Publish
       </button>
     </form>

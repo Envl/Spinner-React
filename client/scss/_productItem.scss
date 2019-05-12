@@ -4,14 +4,15 @@
   align-items: flex-start;
   width: 360px;
   height: 420px;
-  border: solid 2px #d8d8d8;
-  margin: -2px -2px 0 0;
+  border: solid 1px #d8d8d8;
+  margin: -1px -1px 0 0;
   .label {
     position: relative;
     display: none;
   }
 
   .text-info {
+    padding: 10px 0 0 20px;
     height: 70px;
     .title {
       margin: 5px 0;
@@ -34,7 +35,7 @@
   border-radius: 3px;
 }
 
-.btn-add {
+.btn-request {
   position: relative;
   align-self: flex-end;
   bottom: -36px;

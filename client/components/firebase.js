@@ -9,21 +9,35 @@ class Firebase {
   constructor() {
     app.initializeApp(config)
 
+    this.attachAuth = this.attachAuth.bind(this)
+
+    this.app = app
     this.auth = app.auth()
+    this.db = app.firestore()
+    this.storage = app.storage
+    this.user = uid => app.firestore().doc(`users/${uid}`)
+
     const usr = JSON.parse(localStorage.getItem('currentUser'))
     if (usr) {
       this.currentUser = usr
     }
     app.auth().onAuthStateChanged(authUser => {
-      console.log(authUser, 'asdad')
+      if (!authUser) {
+        return
+      }
       localStorage.setItem('currentUser', JSON.stringify(authUser))
       this.attachAuth(authUser)
+      this.user(authUser.uid)
+        .get()
+        .then(doc => {
+          this.myProfile = Object.assign(doc.data(), {
+            emailVerified: authUser.emailVerified,
+            displayName: authUser.displayName,
+            photoURL: authUser.photoURL
+          })
+          console.log(this.myProfile, 'ssss', authUser)
+        })
     })
-    this.attachAuth = this.attachAuth.bind(this)
-    this.db = app.firestore()
-    this.storage = app.storage
-
-    this.user = uid => app.firestore().doc(`users/${uid}`)
   }
 
   attachAuth(authUser) {
@@ -33,7 +47,9 @@ class Firebase {
 
 const FirebaseContext = React.createContext(null)
 const withFirebase = Component => props => (
-  <FirebaseContext.Consumer>{firebase => <Component {...props} firebase={firebase} />}</FirebaseContext.Consumer>
+  <FirebaseContext.Consumer>
+    {firebase => <Component {...props} firebase={firebase} />}
+  </FirebaseContext.Consumer>
 )
 
-export { Firebase, FirebaseContext, withFirebase }
+export {Firebase, FirebaseContext, withFirebase}
