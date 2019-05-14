@@ -10,9 +10,7 @@ const HistoryPage = props => {
       .get()
       .then(rsl => {
         let msgs = []
-        rsl.forEach(e => {
-          msgs.push(Object.assign(e.data(), {id: e.id}))
-        })
+        rsl.forEach(e => msgs.push({...e.data(), id: e.id}))
         setMsgs(msgs)
       })
   }, [])

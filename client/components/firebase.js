@@ -31,11 +31,12 @@ class Firebase {
       this.user(authUser.uid)
         .get()
         .then(doc => {
-          this.myProfile = Object.assign(doc.data(), {
+          this.myProfile = {
+            ...doc.data(),
             emailVerified: authUser.emailVerified,
             displayName: authUser.displayName,
             photoURL: authUser.photoURL
-          })
+          }
           console.log(this.myProfile, 'ssss', authUser)
         })
     })
@@ -46,11 +47,9 @@ class Firebase {
   }
 }
 
-const FirebaseContext = React.createContext(null)
+const firebase = new Firebase()
 const withFirebase = Component => props => (
-  <FirebaseContext.Consumer>
-    {firebase => <Component {...props} firebase={firebase} />}
-  </FirebaseContext.Consumer>
+  <Component {...props} firebase={firebase} />
 )
 
-export {Firebase, FirebaseContext, withFirebase}
+export {Firebase, withFirebase}

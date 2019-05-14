@@ -12,9 +12,7 @@ const Items = props => {
       .get()
       .then(rsl => {
         let itemArr = []
-        rsl.forEach(e => {
-          itemArr.push(Object.assign(e.data(), {id: e.id}))
-        })
+        rsl.forEach(e => itemArr.push({...e.data(), id: e.id}))
         setItems(itemArr)
       })
       .catch(error => {
