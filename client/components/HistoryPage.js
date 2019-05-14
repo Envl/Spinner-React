@@ -14,7 +14,6 @@ const HistoryPage = props => {
         setMsgs(msgs)
       })
   }, [])
-  console.log(msgs)
 
   return (
     <div className="history-page">
