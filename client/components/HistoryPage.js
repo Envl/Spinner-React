@@ -5,7 +5,7 @@ import {ROUTES, TRANSAC_API} from '../constants'
 const HistoryPage = props => {
   const [msgs, setMsgs] = useState([])
   useEffect(() => {
-    props.firebase.db
+    props.firebase.fs
       .collection('transactions')
       .get()
       .then(rsl => {

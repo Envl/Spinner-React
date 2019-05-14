@@ -7,7 +7,7 @@ import {ROUTES, TRANSAC_API} from '../constants'
 const Items = props => {
   const [items, setItems] = useState([])
   useEffect(() => {
-    props.firebase.db
+    props.firebase.fs
       .collection('items')
       .get()
       .then(rsl => {

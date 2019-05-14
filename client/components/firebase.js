@@ -1,55 +1,51 @@
 import React from 'react'
-import app from 'firebase/app'
+import _app from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
 import config from '../../config'
 
-class Firebase {
-  constructor() {
-    app.initializeApp(config)
-
-    this.attachAuth = this.attachAuth.bind(this)
-
-    this.app = app
-    this.auth = app.auth()
-    this.db = app.firestore()
-    this.storage = app.storage
-    this.user = uid => app.firestore().doc(`users/${uid}`)
-    this.transaction = id => app.firestore().doc(`transactions/${id}`)
-
-    const usr = JSON.parse(localStorage.getItem('currentUser'))
-    if (usr) {
-      this.currentUser = usr
-    }
-    app.auth().onAuthStateChanged(authUser => {
-      if (!authUser) {
-        return
+let fb = {}
+// init
+_app.initializeApp(config)
+_app.auth().onAuthStateChanged(authUser => {
+  if (!authUser) {
+    return
+  }
+  localStorage.setItem('currentUser', JSON.stringify(authUser))
+  fb.currentUser = authUser
+  fb.user(authUser.uid)
+    .get()
+    .then(doc => {
+      fb.myProfile = {
+        ...doc.data(),
+        emailVerified: authUser.emailVerified,
+        displayName: authUser.displayName,
+        photoURL: authUser.photoURL
       }
-      localStorage.setItem('currentUser', JSON.stringify(authUser))
-      this.attachAuth(authUser)
-      this.user(authUser.uid)
-        .get()
-        .then(doc => {
-          this.myProfile = {
-            ...doc.data(),
-            emailVerified: authUser.emailVerified,
-            displayName: authUser.displayName,
-            photoURL: authUser.photoURL
-          }
-          console.log(this.myProfile, 'ssss', authUser)
-        })
+      console.log(fb.myProfile, 'ssss', authUser)
     })
-  }
-
-  attachAuth(authUser) {
-    this.currentUser = authUser
-  }
+})
+// shortcuts
+fb.app = _app
+fb.auth = _app.auth()
+fb.fs = _app.firestore()
+fb.storage = _app.storage
+fb.user = uid => _app.firestore().doc(`users/${uid}`)
+fb.transaction = id => _app.firestore().doc(`transactions/${id}`)
+const localUsr = JSON.parse(localStorage.getItem('currentUser'))
+if (localUsr) {
+  fb.currentUser = localUsr
 }
 
-const firebase = new Firebase()
 const withFirebase = Component => props => (
-  <Component {...props} firebase={firebase} />
+  <Component {...props} firebase={fb} />
 )
+const RequireLogin = Component => props =>
+  props.firebase && props.firebase.currentUser ? (
+    Component
+  ) : (
+    <Redirect to={{pathname: ROUTES.signup}} />
+  )
 
-export {Firebase, withFirebase}
+export {withFirebase, RequireLogin}
