@@ -37,6 +37,7 @@ const localUsr = JSON.parse(localStorage.getItem('currentUser'))
 if (localUsr) {
   fb.currentUser = localUsr
 }
+console.log('eeeeeevvvvvvvn', process.env.NODE_ENV)
 
 const withFirebase = Component => props => (
   <Component {...props} firebase={fb} />
