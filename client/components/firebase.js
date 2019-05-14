@@ -46,11 +46,9 @@ class Firebase {
   }
 }
 
-const FirebaseContext = React.createContext(null)
+const firebase = new Firebase()
 const withFirebase = Component => props => (
-  <FirebaseContext.Consumer>
-    {firebase => <Component {...props} firebase={firebase} />}
-  </FirebaseContext.Consumer>
+  <Component {...props} firebase={firebase} />
 )
 
-export {Firebase, FirebaseContext, withFirebase}
+export {Firebase, withFirebase}
