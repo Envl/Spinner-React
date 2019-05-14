@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './app'
-import {Firebase} from './components/firebase'
 
 import './scss/main.scss'
 

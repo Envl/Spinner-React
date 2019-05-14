@@ -1,10 +1,11 @@
-const webpack = require('webpack'); // eslint-disable-line
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
+const webpack = require('webpack') // eslint-disable-line
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const Dotenv = require('dotenv-webpack')
 
-const outputDirectory = path.join(__dirname, 'static');
-const indexpath = path.join(__dirname, 'client', 'index.js');
-const entries = ['babel-polyfill', indexpath];
+const outputDirectory = path.join(__dirname, 'static')
+const indexpath = path.join(__dirname, 'client', 'index.js')
+const entries = ['babel-polyfill', indexpath]
 
 module.exports = {
   entry: entries,
@@ -74,6 +75,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'client', 'index.html')
-    })
+    }),
+    new Dotenv()
   ]
-};
+}
