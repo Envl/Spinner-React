@@ -2,10 +2,8 @@ import React, {useState, useEffect} from 'react'
 
 import {withFirebase, RequireLogin} from './firebase'
 import {ROUTES, TRANSAC_API} from '../constants'
-import {CurrentUserGlobal} from '../store'
 
 const HistoryPage = props => {
-  const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
   const [firebaseMounted, setMounted] = useState(false)
 
   const [msgs, setMsgs] = useState([])

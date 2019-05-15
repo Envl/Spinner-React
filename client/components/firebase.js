@@ -6,7 +6,6 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import config from '../../config'
 import {ROUTES} from '../constants'
-import {CurrentUserGlobal} from '../store'
 
 let fb = {}
 // init
@@ -45,10 +44,8 @@ const withFirebase = Component => props => (
 )
 
 const RequireLogin = Component => props => {
-  const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
-
-  console.log('in require login', currentUser)
-  return currentUser ? (
+  console.log('in require login', fb.currentUser)
+  return fb.currentUser ? (
     <Component firebase={fb} {...props} />
   ) : (
     <Redirect to={{pathname: ROUTES.signup}} />
