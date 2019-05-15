@@ -6,10 +6,19 @@ import Upload from './components/Upload'
 import HistoryPage from './components/HistoryPage'
 import {withFirebase} from './components/firebase'
 import {ROUTES} from './constants'
+import NavBar from './components/NavBar'
+import {CurrentUserGlobal} from './store'
 
 const app = props => {
+  const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
+
+  props.firebase.auth.onAuthStateChanged(authUser => {
+    setCurrentUser(authUser)
+  })
+
   return (
     <BrowserRouter>
+      <NavBar />
       <Switch>
         <Route
           path={ROUTES.home}

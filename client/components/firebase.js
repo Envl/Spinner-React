@@ -11,11 +11,11 @@ let fb = {}
 // init
 _app.initializeApp(config)
 _app.auth().onAuthStateChanged(authUser => {
+  fb.currentUser = authUser
   if (!authUser) {
     return
   }
   localStorage.setItem('currentUser', JSON.stringify(authUser))
-  fb.currentUser = authUser
   fb.user(authUser.uid)
     .get()
     .then(doc => {
@@ -30,14 +30,21 @@ _app.auth().onAuthStateChanged(authUser => {
 })
 // shortcuts
 fb.app = _app
+_app.auth().languageCode = 'en'
 fb.auth = _app.auth()
 fb.fs = _app.firestore()
 fb.storage = _app.storage
 fb.user = uid => fb.fs.collection('users').doc(uid)
 fb.transaction = id => _app.firestore().doc(`transactions/${id}`)
-fb.currentUser = JSON.parse(localStorage.getItem('currentUser'))
+
+const googleAuthProvider = new _app.auth.GoogleAuthProvider()
+
+// returns a promise
+fb.authWithGoogle = () => _app.auth().signInWithPopup(googleAuthProvider)
 
 console.log('eeeeeevvvvvvvn', process.env.NODE_ENV)
+
+fb.currentUser = JSON.parse(localStorage.getItem('currentUser'))
 
 const withFirebase = Component => props => (
   <Component {...props} firebase={fb} />
