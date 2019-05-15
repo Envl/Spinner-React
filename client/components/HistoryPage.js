@@ -2,16 +2,16 @@ import React, {useState, useEffect} from 'react'
 
 import {withFirebase, RequireLogin} from './firebase'
 import {ROUTES, TRANSAC_API} from '../constants'
+import {CurrentUserGlobal} from '../store'
 
 const HistoryPage = props => {
+  const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
   const [firebaseMounted, setMounted] = useState(false)
 
   const [msgs, setMsgs] = useState([])
   useEffect(() => {
-    console.log('before', props.firebase.currentUser)
-    console.log('props', props)
     props.firebase
-      .user(props.firebase.currentUser.uid)
+      .user(props.firebase.auth.currentUser.uid)
       .get()
       .then(doc =>
         Promise.all(
@@ -45,12 +45,12 @@ const HistoryPage = props => {
             <h3>{msg.item.title}</h3>
             <div className="status">{msg.status}</div>
             <div className="people">
-              {props.firebase.currentUser.uid !== msg.consumerId
+              {props.firebase.auth.currentUser.uid !== msg.consumerId
                 ? msg.consumer.email
                 : msg.provider.email}
             </div>
             {//-----Operation Btns ---------------
-            props.firebase.currentUser.uid === msg.providerId &&
+            props.firebase.auth.currentUser.uid === msg.providerId &&
               msg.status === 'waiting' && (
                 <div className="operation">
                   <button

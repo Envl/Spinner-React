@@ -6,16 +6,12 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import config from '../../config'
 import {ROUTES} from '../constants'
+import {CurrentUserGlobal} from '../store'
 
 let fb = {}
 // init
 _app.initializeApp(config)
 _app.auth().onAuthStateChanged(authUser => {
-  fb.currentUser = authUser
-  if (!authUser) {
-    return
-  }
-  localStorage.setItem('currentUser', JSON.stringify(authUser))
   fb.user(authUser.uid)
     .get()
     .then(doc => {
@@ -44,15 +40,15 @@ fb.authWithGoogle = () => _app.auth().signInWithPopup(googleAuthProvider)
 
 console.log('eeeeeevvvvvvvn', process.env.NODE_ENV)
 
-fb.currentUser = JSON.parse(localStorage.getItem('currentUser'))
-
 const withFirebase = Component => props => (
   <Component {...props} firebase={fb} />
 )
 
 const RequireLogin = Component => props => {
-  console.log('in require login', fb, fb.currentUser)
-  return fb.currentUser ? (
+  const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
+
+  console.log('in require login', currentUser)
+  return currentUser ? (
     <Component firebase={fb} {...props} />
   ) : (
     <Redirect to={{pathname: ROUTES.signup}} />

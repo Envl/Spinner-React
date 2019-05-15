@@ -25,6 +25,7 @@ const app = props => {
           exact
           render={localProps => <Items {...localProps} />}
         />
+
         <Route
           path={ROUTES.signup}
           render={localProps => <Signup {...localProps} />}
