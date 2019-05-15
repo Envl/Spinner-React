@@ -12,6 +12,7 @@ let fb = {}
 // init
 _app.initializeApp(config)
 _app.auth().onAuthStateChanged(authUser => {
+  localStorage.setItem('currentUser', {uid: authUser.uid})
   fb.user(authUser.uid)
     .get()
     .then(doc => {
@@ -48,8 +49,12 @@ const RequireLogin = Component => props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
 
   console.log('in require login', currentUser)
-  return currentUser ? (
-    <Component firebase={fb} {...props} />
+  return currentUser || JSON.parse(localStorage.getItem('currentUser')) ? (
+    currentUser ? (
+      <Component firebase={fb} {...props} />
+    ) : (
+      'Loading '
+    )
   ) : (
     <Redirect to={{pathname: ROUTES.signup}} />
   )
