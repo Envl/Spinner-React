@@ -1,4 +1,4 @@
 [[redirects]]
   from="/*"
-  to="/index.html"
-  force=true 
+  to="/index"
+  status=200
