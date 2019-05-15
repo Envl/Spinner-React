@@ -44,8 +44,8 @@ const withFirebase = Component => props => (
 )
 
 const RequireLogin = Component => props => {
-  console.log('in require login', fb.currentUser)
-  return fb.currentUser ? (
+  console.log('in require login', fb.auth.currentUser)
+  return fb.auth.currentUser ? (
     <Component firebase={fb} {...props} />
   ) : (
     <Redirect to={{pathname: ROUTES.signup}} />
