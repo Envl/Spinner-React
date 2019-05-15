@@ -1,13 +1,13 @@
-import React, {useState} from 'react'
-import {withFirebase} from './firebase'
-import {ROUTES} from '../constants'
+import React, { useState } from 'react'
+import { withFirebase } from './firebase'
+import { ROUTES } from '../constants'
 
 const SignUp = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   //   const [username, setUsername] = useState('')
 
-  const {firebase, history} = props
+  const { firebase, history } = props
   const handleSignUpSubmit = () => {
     firebase.auth
       .createUserWithEmailAndPassword(email, password)
@@ -18,10 +18,10 @@ const SignUp = props => {
             // username: username,
             id: authUser.user.uid,
             transactions: [],
-            items: []
+            items: [],
           },
-          {merge: true}
-        )
+          { merge: true },
+        ),
       )
       .then(() => {
         history.push(ROUTES.items)
@@ -31,27 +31,42 @@ const SignUp = props => {
       })
   }
 
-  const handleSignInSubmit = () => {
-    firebase.auth
-      .signInWithEmailAndPassword(email, password)
-      .catch(({code, message}) => {
-        alert(code, message)
-      })
-      .then(res => {
-        console.log('login', res)
-        history.push(ROUTES.items)
-      })
+  const handleSignInSubmit = type => event => {
+    switch (type) {
+      case 'email':
+        firebase.auth
+          .signInWithEmailAndPassword(email, password)
+          .catch(({ code, message }) => {
+            alert(code, message)
+          })
+          .then(res => {
+            console.log('login', res)
+            history.push(ROUTES.items)
+          })
+        break
+      case 'google':
+        firebase
+          .authWithGoogle()
+          .then(res => {
+            console.log(res)
+            history.push(ROUTES.items)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        break
+    }
   }
 
   return (
-    <div className="sign-up-form-group">
-      <label htmlFor="email">Email </label>
+    <div className='sign-up-form-group'>
+      <label htmlFor='email'>Email </label>
       <input
-        id="register-email-input"
-        type="text"
-        name="email"
+        id='register-email-input'
+        type='text'
+        name='email'
         value={email}
-        placeholder="Email: *"
+        placeholder='Email: *'
         onChange={event => {
           event.preventDefault()
           setEmail(event.target.value)
@@ -69,30 +84,25 @@ const SignUp = props => {
           setUsername(event.target.value)
         }}
       /> */}
-      <label htmlFor="password">Password</label>
+      <label htmlFor='password'>Password</label>
       <input
-        id="register-password-input"
-        name="password"
-        type="password"
+        id='register-password-input'
+        name='password'
+        type='password'
         value={password}
-        placeholder="Password"
+        placeholder='Password'
         onChange={event => {
           event.preventDefault()
           setPassword(event.target.value)
         }}
       />
-      <button
-        type="submit"
-        className="btn-signup btn"
-        onClick={handleSignUpSubmit}>
+      <button type='submit' className='btn-signup btn' onClick={handleSignUpSubmit}>
         Sign up now
       </button>
-      <button
-        type="submit"
-        className="btn-signin btn"
-        onClick={handleSignInSubmit}>
+      <button type='submit' className='btn-signin btn' onClick={handleSignInSubmit('email')}>
         Sign In
       </button>
+      <button onClick={handleSignInSubmit('google')}>Or sign in with Google</button>
     </div>
   )
 }
