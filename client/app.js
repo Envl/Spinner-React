@@ -12,6 +12,8 @@ import {CurrentUserGlobal} from './store'
 const app = props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
   props.firebase.auth.onAuthStateChanged(authUser => {
+    console.log('on auth', authUser)
+
     setCurrentUser(authUser)
   })
 

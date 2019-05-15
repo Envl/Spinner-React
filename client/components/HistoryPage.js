@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {withFirebase, RequireLogin} from './firebase'
 import {ROUTES, TRANSAC_API} from '../constants'
 
-const HistoryMsg = ({msg}) => {
+const HistoryMsg = ({msg, myUid}) => {
   const [showOptions, setShowOptions] = useState(true)
   const setTransacStatus = status => {
     console.log(status, msg)
@@ -18,27 +18,23 @@ const HistoryMsg = ({msg}) => {
         <h3>{msg.item.title}</h3>
         <div className="status">{msg.status}</div>
         <div className="people">
-          {props.firebase.auth.currentUser.uid !== msg.consumerId
-            ? msg.consumer.email
-            : msg.provider.email}
+          {myUid !== msg.consumerId ? msg.consumer.email : msg.provider.email}
         </div>
         {//-----Operation Btns ---------------
-        props.firebase.auth.currentUser.uid === msg.providerId &&
-          msg.status === 'waiting' &&
-          showOptions && (
-            <div className="operation">
-              <button
-                className="btn btn-yes"
-                onClick={() => setTransacStatus('accepted')}>
-                Accept
-              </button>
-              <button
-                className="btn btn-no"
-                onClick={() => setTransacStatus('declined')}>
-                Decline
-              </button>
-            </div>
-          )
+        myUid === msg.providerId && msg.status === 'waiting' && showOptions && (
+          <div className="operation">
+            <button
+              className="btn btn-yes"
+              onClick={() => setTransacStatus('accepted')}>
+              Accept
+            </button>
+            <button
+              className="btn btn-no"
+              onClick={() => setTransacStatus('declined')}>
+              Decline
+            </button>
+          </div>
+        )
         //---------------------------
         }
       </div>
