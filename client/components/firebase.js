@@ -1,9 +1,11 @@
 import React from 'react'
+import {Redirect} from 'react-router-dom'
 import _app from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
 import config from '../../config'
+import {ROUTES} from '../constants'
 
 let fb = {}
 // init
