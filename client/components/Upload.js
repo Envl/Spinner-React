@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import {withFirebase} from './firebase'
+
+import {withFirebase, RequireLogin} from './firebase'
 import '../constants'
 import {ITEM_API, ROUTES} from '../constants'
 import {uploadPictureToFirebase} from '../utilities'
@@ -114,4 +115,4 @@ const UploadPage = ({history, firebase}) => {
   )
 }
 
-export default withFirebase(UploadPage)
+export default RequireLogin(UploadPage)

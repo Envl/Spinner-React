@@ -1,19 +1,40 @@
-import {withFirebase} from './firebase'
 import React, {useState, useEffect} from 'react'
+
+import {withFirebase, RequireLogin} from './firebase'
 import {ROUTES, TRANSAC_API} from '../constants'
 
 const HistoryPage = props => {
+  const [firebaseMounted, setMounted] = useState(false)
+
   const [msgs, setMsgs] = useState([])
   useEffect(() => {
-    props.firebase.fs
-      .collection('transactions')
+    console.log('before', props.firebase.currentUser)
+    console.log('props', props)
+    props.firebase
+      .user(props.firebase.currentUser.uid)
       .get()
-      .then(rsl => {
-        let msgs = []
-        rsl.forEach(e => msgs.push({...e.data(), id: e.id}))
-        setMsgs(msgs)
+      .then(doc =>
+        Promise.all(
+          doc.data().transactions.map(t => props.firebase.transaction(t).get())
+        )
+      )
+      .then(transacs => {
+        setMsgs(
+          transacs
+            .filter(t => t.data())
+            .map(tt => {
+              return {...tt.data(), id: tt.id}
+            })
+        )
       })
   }, [])
+
+  const setTransacStatus = status => {
+    console.log(status, msg)
+
+    props.firebase.transaction(msg.id).update({status: status})
+    // msgs.filter(msg=>)
+  }
 
   return (
     <div className="history-page">
@@ -34,22 +55,12 @@ const HistoryPage = props => {
                 <div className="operation">
                   <button
                     className="btn btn-yes"
-                    onClick={() => {
-                      console.log('acc', msg)
-
-                      props.firebase
-                        .transaction(msg.id)
-                        .update({status: 'accepted'})
-                    }}>
+                    onClick={() => setTransacStatus('accepted')}>
                     Accept
                   </button>
                   <button
                     className="btn btn-no"
-                    onClick={() =>
-                      props.firebase
-                        .transaction(msg.id)
-                        .update({status: 'declined'})
-                    }>
+                    onClick={() => setTransacStatus('declined')}>
                     Decline
                   </button>
                 </div>
@@ -63,4 +74,4 @@ const HistoryPage = props => {
   )
 }
 
-export default withFirebase(HistoryPage)
+export default RequireLogin(HistoryPage)
