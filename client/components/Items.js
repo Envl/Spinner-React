@@ -1,4 +1,4 @@
-import {withFirebase} from './firebase'
+import {withFirebase, RequireLogin} from './firebase'
 import React, {useState, useEffect} from 'react'
 import ItemGrid from './ItemGrid'
 import {Link} from 'react-router-dom'
