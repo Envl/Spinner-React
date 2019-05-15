@@ -33,22 +33,23 @@ fb.app = _app
 fb.auth = _app.auth()
 fb.fs = _app.firestore()
 fb.storage = _app.storage
-fb.user = uid => _app.firestore().doc(`users/${uid}`)
+fb.user = uid => fb.fs.collection('users').doc(uid)
 fb.transaction = id => _app.firestore().doc(`transactions/${id}`)
-const localUsr = JSON.parse(localStorage.getItem('currentUser'))
-if (localUsr) {
-  fb.currentUser = localUsr
-}
+fb.currentUser = JSON.parse(localStorage.getItem('currentUser'))
+
 console.log('eeeeeevvvvvvvn', process.env.NODE_ENV)
 
 const withFirebase = Component => props => (
   <Component {...props} firebase={fb} />
 )
-const RequireLogin = Component => props =>
-  props.firebase && props.firebase.currentUser ? (
-    Component
+
+const RequireLogin = Component => props => {
+  console.log('in require login', fb, fb.currentUser)
+  return fb.currentUser ? (
+    <Component firebase={fb} {...props} />
   ) : (
     <Redirect to={{pathname: ROUTES.signup}} />
   )
+}
 
 export {withFirebase, RequireLogin}
