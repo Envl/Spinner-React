@@ -26,21 +26,11 @@ const app = props => {
         />
         <Route
           path={ROUTES.upload}
-          render={localProps => {
-            const loggedin = props.firebase && props.firebase.currentUser
-            if (loggedin) return <Upload {...localProps} />
-            else return <Redirect to={{pathname: ROUTES.signup}} />
-          }}
+          render={localProps => <Upload {...localProps} />}
         />
         <Route
           path={ROUTES.history}
-          render={localProps => {
-            if (props.firebase && props.firebase.currentUser) {
-              return <HistoryPage {...localProps} />
-            } else {
-              return <Redirect to={{pathname: ROUTES.signup}} />
-            }
-          }}
+          render={localProps => <HistoryPage {...localProps} />}
         />
       </Switch>
     </BrowserRouter>
