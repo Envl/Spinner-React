@@ -12,7 +12,7 @@ let fb = {}
 // init
 _app.initializeApp(config)
 _app.auth().onAuthStateChanged(authUser => {
-  localStorage.setItem('currentUser', {uid: authUser.uid})
+  localStorage.setItem('currentUser', JSON.stringify(authUser))
   fb.user(authUser.uid)
     .get()
     .then(doc => {

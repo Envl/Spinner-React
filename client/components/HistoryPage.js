@@ -3,12 +3,15 @@ import React, {useState, useEffect} from 'react'
 import {withFirebase, RequireLogin} from './firebase'
 import {ROUTES, TRANSAC_API} from '../constants'
 
-const HistoryMsg = ({msg, myUid}) => {
+const HistoryMsg = ({msg, myUid, firebase}) => {
   const [showOptions, setShowOptions] = useState(true)
+  const [status, SetStatus] = useState(msg.status)
+
   const setTransacStatus = status => {
     console.log(status, msg)
+    SetStatus(status)
     setShowOptions(false)
-    props.firebase.transaction(msg.id).update({status: status})
+    firebase.transaction(msg.id).update({status: status})
     // msgs.filter(msg=>)
   }
   return (
@@ -16,7 +19,7 @@ const HistoryMsg = ({msg, myUid}) => {
       <img src={msg.item.photoUrls && msg.item.photoUrls[0]} alt="" />
       <div className="info">
         <h3>{msg.item.title}</h3>
-        <div className="status">{msg.status}</div>
+        <div className="status">{status}</div>
         <div className="people">
           {myUid !== msg.consumerId ? msg.consumer.email : msg.provider.email}
         </div>
@@ -68,7 +71,11 @@ const HistoryPage = props => {
   return (
     <div className="history-page">
       {msgs.map(msg => (
-        <HistoryMsg msg={msg} />
+        <HistoryMsg
+          msg={msg}
+          myUid={props.firebase.auth.currentUser.uid}
+          firebase={props.firebase}
+        />
       ))}
     </div>
   )

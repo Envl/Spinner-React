@@ -18,6 +18,9 @@ const Item = ({item, onRequest}) => {
       <button className="btn btn-request" onClick={() => onRequest(item)}>
         Request
       </button>
+      <button className="btn btn-request" onClick={() => onRequest(item)}>
+        To Wishlist
+      </button>
     </div>
   )
 }
