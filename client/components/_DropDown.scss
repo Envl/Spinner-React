@@ -1,0 +1,26 @@
+.dropdown-list {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  position: absolute;
+  border-radius: 6px;
+  box-shadow: 0 11px 29px 0 rgba(0, 0, 0, 0.236);
+  right: 10px;
+  text-align: left;
+  white-space: nowrap;
+  & > * {
+    border-radius: 6px !important;
+    padding: 8px 10px;
+    border: none;
+    outline: none;
+    color: black;
+    text-align: left;
+    font-weight: bold;
+    overflow: hidden;
+    text-decoration: none;
+    &:hover {
+      background: #d2ecfe;
+      cursor: pointer;
+    }
+  }
+}

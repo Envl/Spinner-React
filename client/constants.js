@@ -3,7 +3,8 @@ const ROUTES = {
   items: '/items',
   upload: '/upload',
   signup: '/signup',
-  history: '/history'
+  history: '/history',
+  homepage: '/homepage'
 }
 
 const AUTH_API = 'https://us-central1-spinner-stuff.cloudfunctions.net/api_user'
