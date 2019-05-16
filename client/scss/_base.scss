@@ -1,8 +1,10 @@
-// body {
-//   display: flex;
-//   justify-content: center;
-//   width: 100%;
-// }
+#root {
+  display: flex;
+  // justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
 nav,
 body {
   margin: 0;

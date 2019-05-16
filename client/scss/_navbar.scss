@@ -1,13 +1,62 @@
 .navbar {
-  height: 60px;
+  // height: 60px;
+  z-index: 10;
+  background: white;
   position: sticky;
+  top: -40px;
   width: 100%;
-  background-color: $main-color;
-  justify-content: space-between;
   display: flex;
+  flex-direction: column;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.17) 0px 1px 13px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.17) 0px 1px 13px 2px;
+  box-shadow: rgba(0, 0, 0, 0.17) 0px 1px 13px 2px;
+  margin-bottom: 30px;
 
   a {
     text-decoration: none;
+    color: black;
     display: inline-block;
+  }
+  button {
+    background: none;
+    color: black;
+    border-radius: 0;
+  }
+
+  @include smaller-than(sm) {
+    height: 50px;
+  }
+}
+
+.nav-up {
+  justify-content: space-between;
+  .nav-logo {
+    width: 96px;
+    background: url(../assets/img/logo.png) no-repeat;
+  }
+}
+
+.nav-up,
+.nav-left,
+.nav-right {
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-down {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 20px 10px 10px;
+
+  & > * {
+    white-space: nowrap;
+    font-size: 14px;
+    margin: 0 20px;
+    text-transform: capitalize;
+  }
+  @include smaller-than(sm) {
+    flex-direction: column;
+    justify-content: flex-start;
   }
 }
