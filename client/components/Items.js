@@ -21,13 +21,13 @@ const Items = props => {
   }, [])
 
   const onRequest = item => {
-    if (!props.firebase.currentUser) {
+    if (!props.firebase.auth.currentUser) {
       props.history.push(ROUTES.signup)
       return
     }
     Promise.all([
       props.firebase
-        .user(props.firebase.currentUser.uid)
+        .user(props.firebase.auth.currentUser.uid)
         .get()
         .then(doc => doc.data()),
       props.firebase
@@ -37,22 +37,25 @@ const Items = props => {
     ]).then(users => {
       console.log('usrs', users)
 
-      fetch(TRANSAC_API + '?id=' + item.id + props.firebase.currentUser.uid, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          consumerId: props.firebase.currentUser.uid,
-          consumer: users[0],
-          providerId: item.ownerId,
-          provider: users[1],
-          itemId: item.id,
-          item,
-          status: 'waiting',
-          timestamp: Date.now()
-        })
-      })
+      fetch(
+        TRANSAC_API + '?id=' + item.id + props.firebase.auth.currentUser.uid,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            consumerId: props.firebase.auth.currentUser.uid,
+            consumer: users[0],
+            providerId: item.ownerId,
+            provider: users[1],
+            itemId: item.id,
+            item,
+            status: 'waiting',
+            timestamp: Date.now()
+          })
+        }
+      )
         .then(rst => {
           if (rst.ok) {
             return rst.json()
@@ -62,16 +65,21 @@ const Items = props => {
           console.log(data)
         })
         .catch(err => console.log('failed', err))
-      console.log('me', props.firebase.currentUser.uid, 'you', item.ownerId)
+      console.log(
+        'me',
+        props.firebase.auth.currentUser.uid,
+        'you',
+        item.ownerId
+      )
 
-      props.firebase.user(props.firebase.currentUser.uid).update({
+      props.firebase.user(props.firebase.auth.currentUser.uid).update({
         transactions: props.firebase.app.firestore.FieldValue.arrayUnion(
-          item.id + props.firebase.currentUser.uid
+          item.id + props.firebase.auth.currentUser.uid
         )
       })
       props.firebase.user(item.ownerId).update({
         transactions: props.firebase.app.firestore.FieldValue.arrayUnion(
-          item.id + props.firebase.currentUser.uid
+          item.id + props.firebase.auth.currentUser.uid
         )
       })
     })

@@ -11,8 +11,9 @@ import {CurrentUserGlobal} from './store'
 
 const app = props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
-
   props.firebase.auth.onAuthStateChanged(authUser => {
+    console.log('on auth', authUser, '--------------------------')
+
     setCurrentUser(authUser)
   })
 
@@ -25,6 +26,7 @@ const app = props => {
           exact
           render={localProps => <Items {...localProps} />}
         />
+
         <Route
           path={ROUTES.signup}
           render={localProps => <Signup {...localProps} />}
