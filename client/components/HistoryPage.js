@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 
 import {withFirebase, RequireLogin} from './firebase'
 import {ROUTES, TRANSAC_API} from '../constants'
+import {FirebaseDataGlobal} from '../store'
 
 const HistoryMsg = ({msg, myUid, firebase}) => {
   const [showOptions, setShowOptions] = useState(true)
@@ -46,8 +47,10 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
 }
 const HistoryPage = props => {
   const [firebaseMounted, setMounted] = useState(false)
+  // const [msgs, setMsgs] = useState([])
+  const {FirebaseData, setFirebaseData} = FirebaseDataGlobal.useContainer('?????')
+  console.log('HistoryPage rendered')
 
-  const [msgs, setMsgs] = useState([])
   useEffect(() => {
     props.firebase
       .user(props.firebase.auth.currentUser.uid)
@@ -58,25 +61,29 @@ const HistoryPage = props => {
         )
       )
       .then(transacs => {
-        setMsgs(
-          transacs
-            .filter(t => t.data())
-            .map(tt => {
-              return {...tt.data(), id: tt.id}
-            })
-        )
+        const processedTransacs = transacs
+          .filter(t => t.data())
+          .map(tt => {
+            return {...tt.data(), id: tt.id}
+          })
+        // setMsgs(processedTransacs)
+        setFirebaseData({histories: processedTransacs})
       })
   }, [])
 
   return (
     <div className="history-page">
-      {msgs.map(msg => (
-        <HistoryMsg
-          msg={msg}
-          myUid={props.firebase.auth.currentUser.uid}
-          firebase={props.firebase}
-        />
-      ))}
+      {FirebaseData &&
+        FirebaseData.histories &&
+        FirebaseData.histories
+          //  msgs.
+          .map(msg => (
+            <HistoryMsg
+              msg={msg}
+              myUid={props.firebase.auth.currentUser.uid}
+              firebase={props.firebase}
+            />
+          ))}
     </div>
   )
 }

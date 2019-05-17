@@ -30,6 +30,7 @@ const UploadPage = ({history, firebase}) => {
     })
       .then(rst => {
         console.log('result', rst)
+        rst.json().then(data => console.log('json', data))
         if (rst.ok) {
           history.push(ROUTES.items)
         }

@@ -6,21 +6,17 @@
   width: 240px;
   height: 340px;
   border: solid 1px #d8d8d8;
-  margin: -1px -1px 0 0;
+  margin: 18px 9px 0 9px;
   border-radius: 6px;
+  @include hover-show('.btn-request');
+  @include hover-offset('.btn-request', 0, -15px);
   &:hover {
     transition: all ease-in;
-    & > button {
-      bottom: 5%;
-      opacity: 1;
-    }
     & :not(button) {
       filter: saturate(0) brightness(0.95);
     }
-    & > *:last-child {
-      display: flex;
-    }
   }
+
   .label {
     position: relative;
     display: none;
@@ -63,9 +59,12 @@
 }
 
 .btn-request {
-  opacity: 0;
+  // opacity: 0;
   position: absolute;
   justify-self: flex-end;
   align-self: center;
   bottom: 1%;
+}
+.label-requested {
+  background: rgb(8, 167, 79);
 }
