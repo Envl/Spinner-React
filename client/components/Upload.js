@@ -14,7 +14,7 @@ const UploadPage = ({history, firebase}) => {
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
-    if (!(uploadProgress === 100)) {
+    if (uploadProgress !== 100 || photoUrls.length == 0) {
       return
     }
     fetch(ITEM_API, {
