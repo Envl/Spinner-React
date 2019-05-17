@@ -1,6 +1,8 @@
-// variables
-@import 'mixins';
+// variables and mixins
 @import 'colors';
+@import 'effects';
+@import 'mixins';
+@import 'animation';
 
 //components
 @import 'buttons';
@@ -14,3 +16,4 @@
 @import 'productItem';
 @import 'productPage';
 @import 'navbar';
+@import 'homepage';
