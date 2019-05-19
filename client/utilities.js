@@ -70,14 +70,14 @@ const uploadPictureToFirebase = (fileObj, remoteFolder, firebase, callback = fal
       () => {
         // Upload completed successfully, now we can get the download URL
         uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-          if (monitor) {
-            // 100% uploaded
-            monitor(1)
-          }
-          if (callback) {
-            callback(downloadURL)
-          }
-          resolve()
+          // if (monitor) {
+          //   // 100% uploaded
+          //   monitor(1)
+          // }
+          // if (callback) {
+          //   callback(downloadURL)
+          // }
+          resolve(downloadURL)
         })
       },
     )

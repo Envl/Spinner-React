@@ -6,8 +6,12 @@ const SignUp = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   //   const [username, setUsername] = useState('')
+  const [valid, setValid] = useState(false)
 
   const { firebase, history } = props
+
+  // const validateEmail = () => /\w+@(\w\.)+\w+/.test(email)
+
   const handleSignUpSubmit = () => {
     firebase.auth
       .createUserWithEmailAndPassword(email, password)
@@ -29,6 +33,16 @@ const SignUp = props => {
       .catch(error => {
         console.log(`${error.message}`)
       })
+  }
+
+  const handleInput = type => event => {
+    switch (type) {
+      case 'email':
+        setEmail(event.target.value)
+        break
+      case 'password':
+        setPassword(event.target.value)
+    }
   }
 
   const handleSignInSubmit = type => event => {
@@ -66,11 +80,9 @@ const SignUp = props => {
         type='text'
         name='email'
         value={email}
+        required
         placeholder='Email: *'
-        onChange={event => {
-          event.preventDefault()
-          setEmail(event.target.value)
-        }}
+        onChange={handleInput('email')}
       />
       {/* <label htmlFor='password'>Username</label>
       <input
@@ -90,11 +102,9 @@ const SignUp = props => {
         name='password'
         type='password'
         value={password}
+        required
         placeholder='Password'
-        onChange={event => {
-          event.preventDefault()
-          setPassword(event.target.value)
-        }}
+        onChange={handleInput('password')}
       />
       <button type='submit' className='btn-signup btn' onClick={handleSignUpSubmit}>
         Sign up now

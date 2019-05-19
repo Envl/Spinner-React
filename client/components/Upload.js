@@ -1,72 +1,92 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 
-import {withFirebase, RequireLogin} from './firebase'
+import { RequireLogin } from './firebase'
 import '../constants'
-import {ITEM_API, ROUTES} from '../constants'
-import {uploadPictureToFirebase} from '../utilities'
+import { ITEM_API, ROUTES } from '../constants'
+import { uploadPictureToFirebase } from '../utilities'
+import imageCompression from 'browser-image-compression'
 
-const UploadPage = ({history, firebase}) => {
+const UploadPage = ({ history, firebase }) => {
   const [title, setItemTitle] = useState('')
   const [price, setItemPrice] = useState('')
   const [description, setItemDescription] = useState('')
-  const [photoUrls, setImgUrls] = useState([])
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [photoUrls, setPhotoUrls] = useState([])
+  const [uploadedFiles, setUploadedFiles] = useState([])
+  const [submitted, setSubmitted] = useState(false)
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
-    if (uploadProgress !== 100 || photoUrls.length == 0) {
-      return
-    }
-    fetch(ITEM_API, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        price,
-        title,
-        description,
-        photoUrls,
-        ownerId: firebase.auth.currentUser.uid
-      })
+    setSubmitted(true)
+    const todo = []
+    // console.log(uploadedFiles)
+    uploadedFiles.forEach(img => {
+      todo.push(uploadPictureToFirebase(img, 'item_images', firebase))
     })
+
+    Promise.all(todo)
+      .then(urls => {
+        setPhotoUrls(photoUrls)
+        console.log(urls)
+        return fetch(ITEM_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            price,
+            title,
+            description,
+            photoUrls: urls,
+            ownerId: firebase.auth.currentUser.uid,
+          }),
+        })
+      })
       .then(rst => {
         console.log('result', rst)
         if (rst.ok) {
           history.push(ROUTES.items)
         }
       })
-      .catch(err => console.log('failed', err))
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   const handleImageUpload = event => {
-    uploadPictureToFirebase(
-      event.target.files[0],
-      'item_images',
-      firebase,
-      url => {
-        const oldUrls = photoUrls.slice()
-        setImgUrls(oldUrls.concat(url))
-      },
-      status => {
-        setUploadProgress(status * 100)
-      }
-    )
+    const imageFile = event.target.files[0]
+    console.log(event.target.files)
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`)
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    }
+    imageCompression(imageFile, options)
+      .then(compressedFile => {
+        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`) // smaller than maxSizeMB
+        const oldFiles = uploadedFiles.slice()
+        setUploadedFiles(oldFiles.concat(compressedFile))
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
   }
 
   const renderProgress = () => {
-    if (uploadProgress === 0) return null
-    else if (uploadProgress == 100) return <h5>Image Uploaded</h5>
-    else return <h5>Uploading ... {uploadProgress} % ... </h5>
+    if (uploadedFiles.length === 0) return <h5>choose a picture to upload</h5>
+    const filenames = uploadedFiles.map(f => f.name)
+    if (submitted) {
+      return <h5>{`Uploading.... ${uploadedFiles.length} pictures to upload, ${photoUrls.length} done...`}</h5>
+    } else {
+      return <h5>{`Files to upload: ${filenames.join(', ')}`}</h5>
+    }
   }
 
   return (
-    <form
-      action="upload"
-      className="upload-form"
-      onSubmit={handleItemUploadSubmit}>
+    <form action='upload' className='upload-form' onSubmit={handleItemUploadSubmit}>
       <input
-        type="text"
-        name="title"
-        placeholder="Title*"
+        type='text'
+        name='title'
+        placeholder='Title*'
         required
         value={title}
         onChange={event => {
@@ -74,9 +94,9 @@ const UploadPage = ({history, firebase}) => {
         }}
       />
       <input
-        type="number"
-        name="price"
-        placeholder="Price*"
+        type='number'
+        name='price'
+        placeholder='Price*'
         required
         value={price}
         onChange={event => {
@@ -84,31 +104,18 @@ const UploadPage = ({history, firebase}) => {
         }}
       />
       <textarea
-        name="description"
-        placeholder="Description*"
+        name='description'
+        placeholder='Description*'
         value={description}
         required
         onChange={event => {
           setItemDescription(event.target.value)
         }}
       />
-      <input
-        type="file"
-        name="upload-img"
-        id="upload-img"
-        required
-        onChange={handleImageUpload}
-      />
-      <label htmlFor="upload-img" id="upload-label" />
+      <input type='file' name='upload-img' id='upload-img' required onChange={handleImageUpload} />
+      <label htmlFor='upload-img' id='upload-label' />
       {renderProgress()}
-      <button
-        type="submit"
-        className="upload-btn btn"
-        // disabled={!(uploadProgress === 100)}
-        // onClick={evt => {
-
-        // }}
-      >
+      <button type='submit' className='upload-btn btn'>
         Publish
       </button>
     </form>
