@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { withFirebase } from './firebase'
 import { ROUTES } from '../constants'
 
@@ -8,9 +8,19 @@ const SignUp = props => {
   //   const [username, setUsername] = useState('')
   const [valid, setValid] = useState(false)
 
+  const emailRef = React.createRef()
+  const passwordRef = React.createRef()
+
   const { firebase, history } = props
 
-  // const validateEmail = () => /\w+@(\w\.)+\w+/.test(email)
+  const validateInput = () => /^\w+@(\w+\.)+\w+$/.test(email) && password.length > 0
+
+  useEffect(() => {
+    const emailInput = emailRef.current
+    const passwordInput = passwordRef.current
+    console.log(emailInput.value, passwordInput)
+    setEmail(emailInput.value)
+  }, [])
 
   const handleSignUpSubmit = () => {
     firebase.auth
@@ -43,6 +53,11 @@ const SignUp = props => {
       case 'password':
         setPassword(event.target.value)
     }
+    if (validateInput()) {
+      setValid(true)
+    } else {
+      setValid(false)
+    }
   }
 
   const handleSignInSubmit = type => event => {
@@ -74,17 +89,20 @@ const SignUp = props => {
 
   return (
     <div className='sign-up-form-group'>
-      <label htmlFor='email'>Email </label>
-      <input
-        id='register-email-input'
-        type='text'
-        name='email'
-        value={email}
-        required
-        placeholder='Email: *'
-        onChange={handleInput('email')}
-      />
-      {/* <label htmlFor='password'>Username</label>
+      <form autoComplete='on'>
+        <label htmlFor='email'>Email </label>
+        <input
+          id='register-email-input'
+          type='text'
+          name='email'
+          value={email}
+          required
+          autoComplete='on'
+          ref={emailRef}
+          placeholder='Email: *'
+          onChange={handleInput('email')}
+        />
+        {/* <label htmlFor='password'>Username</label>
       <input
         id='register-username-input'
         type='text'
@@ -96,23 +114,28 @@ const SignUp = props => {
           setUsername(event.target.value)
         }}
       /> */}
-      <label htmlFor='password'>Password</label>
-      <input
-        id='register-password-input'
-        name='password'
-        type='password'
-        value={password}
-        required
-        placeholder='Password'
-        onChange={handleInput('password')}
-      />
-      <button type='submit' className='btn-signup btn' onClick={handleSignUpSubmit}>
-        Sign up now
-      </button>
-      <button type='submit' className='btn-signin btn' onClick={handleSignInSubmit('email')}>
-        Sign In
-      </button>
-      <button onClick={handleSignInSubmit('google')}>Or sign in with Google</button>
+        <label htmlFor='password'>Password</label>
+        <input
+          id='register-password-input'
+          name='password'
+          type='password'
+          value={password}
+          required
+          placeholder='Password'
+          autoComplete='on'
+          ref={passwordRef}
+          onChange={handleInput('password')}
+        />
+        <button type='submit' className='btn-signup btn' onClick={handleSignUpSubmit} disabled={!valid}>
+          Sign up now
+        </button>
+        <button type='submit' className='btn-signin btn' onClick={handleSignInSubmit('email')} disabled={!valid}>
+          Sign In
+        </button>
+        <button className='btn-signin-google btn' onClick={handleSignInSubmit('google')}>
+          Or sign in with Google
+        </button>
+      </form>
     </div>
   )
 }
