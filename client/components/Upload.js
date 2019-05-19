@@ -10,23 +10,26 @@ const UploadPage = ({ history, firebase }) => {
   const [title, setItemTitle] = useState('')
   const [price, setItemPrice] = useState('')
   const [description, setItemDescription] = useState('')
-  const [photoUrls, setPhotoUrls] = useState([])
   const [uploadedFiles, setUploadedFiles] = useState([])
   const [submitted, setSubmitted] = useState(false)
+  const [uploadCount, setUploadCount] = useState(0)
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
     setSubmitted(true)
     const todo = []
-    // console.log(uploadedFiles)
     uploadedFiles.forEach(img => {
-      todo.push(uploadPictureToFirebase(img, 'item_images', firebase))
+      todo.push(
+        uploadPictureToFirebase(img, 'item_images', firebase, () => {
+          setUploadCount(uploadCount + 1)
+        }),
+      )
     })
 
     Promise.all(todo)
-      .then(urls => {
-        setPhotoUrls(photoUrls)
-        console.log(urls)
+      .then(photoUrls => {
+        // setPhotoUrls(photoUrls)
+        // console.log(urls)
         return fetch(ITEM_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -34,7 +37,7 @@ const UploadPage = ({ history, firebase }) => {
             price,
             title,
             description,
-            photoUrls: urls,
+            photoUrls,
             ownerId: firebase.auth.currentUser.uid,
           }),
         })
@@ -75,7 +78,7 @@ const UploadPage = ({ history, firebase }) => {
     if (uploadedFiles.length === 0) return <h5>choose a picture to upload</h5>
     const filenames = uploadedFiles.map(f => f.name)
     if (submitted) {
-      return <h5>{`Uploading.... ${uploadedFiles.length} pictures to upload, ${photoUrls.length} done...`}</h5>
+      return <h5>{`Uploading.... ${uploadedFiles.length} pictures to upload.. ${uploadCount} done`}</h5>
     } else {
       return <h5>{`Files to upload: ${filenames.join(', ')}`}</h5>
     }

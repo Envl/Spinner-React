@@ -61,6 +61,7 @@ const SignUp = props => {
   }
 
   const handleSignInSubmit = type => event => {
+    event.preventDefault()
     switch (type) {
       case 'email':
         firebase.auth
