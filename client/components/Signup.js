@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { withFirebase } from './firebase'
-import { ROUTES } from '../constants'
+import React, {useState, useEffect} from 'react'
+import {withFirebase} from './firebase'
+import {ROUTES} from '../constants'
 
 const SignUp = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  let btnType = 'email'
   //   const [username, setUsername] = useState('')
-  const [valid, setValid] = useState(false)
 
-  const emailRef = React.createRef()
-  const passwordRef = React.createRef()
+  // const emailRef = React.createRef()
+  // const passwordRef = React.createRef()
 
-  const { firebase, history } = props
-
-  const validateInput = () => /^\w+@(\w+\.)+\w+$/.test(email) && password.length > 0
+  const {firebase, history} = props
 
   // useEffect(() => {
   //   const emailInput = emailRef.current
@@ -32,32 +30,19 @@ const SignUp = props => {
             // username: username,
             id: authUser.user.uid,
             transactions: [],
-            items: [],
+            items: []
           },
-          { merge: true },
-        ),
+          {merge: true}
+        )
       )
       .then(() => {
+        console.log('aaaaaaaaaaaaaaafete')
+        debugger
         history.push(ROUTES.items)
       })
       .catch(error => {
         console.log(`${error.message}`)
       })
-  }
-
-  const handleInput = type => event => {
-    switch (type) {
-      case 'email':
-        setEmail(event.target.value)
-        break
-      case 'password':
-        setPassword(event.target.value)
-    }
-    if (validateInput()) {
-      setValid(true)
-    } else {
-      setValid(false)
-    }
   }
 
   const handleSignInSubmit = type => event => {
@@ -66,7 +51,7 @@ const SignUp = props => {
       case 'email':
         firebase.auth
           .signInWithEmailAndPassword(email, password)
-          .catch(({ code, message }) => {
+          .catch(({code, message}) => {
             alert(code, message)
           })
           .then(res => {
@@ -88,20 +73,30 @@ const SignUp = props => {
     }
   }
 
+  const handleSubmit = () => {
+    if (btnType === 'signup') {
+      handleSignUpSubmit()
+    } else if (btnType === 'email') {
+      handleSignInSubmit('email')
+    } else if (btnType === 'google') {
+      handleSignInSubmit('google')
+    }
+  }
+
   return (
-    <div className='sign-up-form-group'>
-      <form autoComplete='on'>
-        <label htmlFor='email'>Email </label>
+    <div className="sign-up-form-group">
+      <form autoComplete="on" onSubmit={handleSubmit}>
+        <label htmlFor="email">Email </label>
         <input
-          id='register-email-input'
-          type='text'
-          name='email'
+          id="register-email-input"
+          type="email"
+          name="email"
           value={email}
           required
-          autoComplete='on'
-          ref={emailRef}
-          placeholder='Email: *'
-          onChange={handleInput('email')}
+          autoComplete="on"
+          // ref={emailRef}
+          placeholder="Email: *"
+          onChange={e => setEmail(e.target.value)}
         />
         {/* <label htmlFor='password'>Username</label>
       <input
@@ -115,25 +110,36 @@ const SignUp = props => {
           setUsername(event.target.value)
         }}
       /> */}
-        <label htmlFor='password'>Password</label>
+        <label htmlFor="password">Password</label>
         <input
-          id='register-password-input'
-          name='password'
-          type='password'
+          id="register-password-input"
+          name="password"
+          type="password"
           value={password}
           required
-          placeholder='Password'
-          autoComplete='on'
-          ref={passwordRef}
-          onChange={handleInput('password')}
+          placeholder="Password"
+          autoComplete="on"
+          // ref={passwordRef}
+          onChange={e => setPassword(e.target.value)}
         />
-        <button type='submit' className='btn-signup btn' onClick={handleSignUpSubmit} disabled={!valid}>
+        <button
+          type="submit"
+          className="btn-signup btn"
+          onClick={e => {
+            btnType = 'signup'
+            e.preventDefault()
+          }}>
           Sign up now
         </button>
-        <button type='submit' className='btn-signin btn' onClick={handleSignInSubmit('email')} disabled={!valid}>
+        <button
+          type="submit"
+          className="btn-signin btn"
+          onClick={() => (btnType = 'email')}>
           Sign In
         </button>
-        <button className='btn-signin-google btn' onClick={handleSignInSubmit('google')}>
+        <button
+          className="btn-signin-google btn"
+          onClick={() => (btnType = 'google')}>
           Or sign in with Google
         </button>
       </form>
