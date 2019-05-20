@@ -48,7 +48,9 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
 const HistoryPage = props => {
   const [firebaseMounted, setMounted] = useState(false)
   // const [msgs, setMsgs] = useState([])
-  const {FirebaseData, setFirebaseData} = FirebaseDataGlobal.useContainer('?????')
+  const {FirebaseData, setFirebaseData} = FirebaseDataGlobal.useContainer(
+    '?????'
+  )
   console.log('HistoryPage rendered')
 
   useEffect(() => {

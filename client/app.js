@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Switch, Route, BrowserRouter, Redirect} from 'react-router-dom'
 import Items from './components/Items'
 import Signup from './components/Signup'
@@ -13,9 +13,9 @@ import {CurrentUserGlobal} from './store'
 
 const app = props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
-  props.firebase.auth.onAuthStateChanged(authUser => {
-    console.log('on auth', authUser, '--------------------------', this)
 
+  props.firebase.auth.onAuthStateChanged(authUser => {
+    // console.log('on auth', authUser, '--------------------------')
     setCurrentUser(authUser)
   })
 

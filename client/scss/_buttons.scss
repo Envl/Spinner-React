@@ -44,8 +44,13 @@
   border-radius: 20px;
   height: 35px;
   background: $main-color;
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
+  // &:hover {
+  // }
   @include button-bg-darken();
+}
+
+.btn:disabled {
+  background-color: orangered;
+  cursor: not-allowed;
 }

@@ -5,6 +5,12 @@ const CurrentUserGlobal = createContainer(init => {
   const [currentUser, setCurrentUser] = useState(init)
   return {currentUser, setCurrentUser}
 })
+// const CurrentUserGlobal = createContainer(useCurrentUser)
+
+const SelectedGeoLocationGlobal = createContainer(init => {
+  const [selectedGeoLocation, setSelectedGeoLocation] = useState(init)
+  return {selectedGeoLocation, setSelectedGeoLocation}
+})
 
 const FirebaseDataGlobal = createContainer(initial => {
   console.log('iiiiiii', initial)
@@ -18,4 +24,4 @@ const FirebaseDataGlobal = createContainer(initial => {
   return {FirebaseData, setFirebaseData}
 })
 
-export {CurrentUserGlobal, FirebaseDataGlobal}
+export {CurrentUserGlobal, FirebaseDataGlobal, SelectedGeoLocationGlobal}

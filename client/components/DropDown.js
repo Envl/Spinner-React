@@ -24,10 +24,19 @@ const DropDown = props => {
     <div
       className={'dropdown ' + (isOpen ? 'list-open' : '')}
       ref={wrapperRef}
-      onClick={props.onClick}>
+      onClick={evt => {
+        props.onClick
+        if (props.noPop) {
+          return
+        }
+        setIsOpen(!isOpen)
+      }}>
       <div
         className="dropdown-title"
         onClick={evt => {
+          if (!props.noPop) {
+            return
+          }
           setIsOpen(!isOpen)
         }}>
         {props.title}

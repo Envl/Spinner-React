@@ -7,6 +7,7 @@ const responseHandler = res => {
   return res.json()
 }
 
+const getId = str => str.match(/(?<=document )[\w]+/)[0]
 const uploadPictureToFirebase = (fileObj, remoteFolder, firebase, callback = false, monitor = false) => {
   return new Promise((resolve, reject) => {
     const storageRef = firebase.storage().ref()
@@ -70,18 +71,18 @@ const uploadPictureToFirebase = (fileObj, remoteFolder, firebase, callback = fal
       () => {
         // Upload completed successfully, now we can get the download URL
         uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-          if (monitor) {
-            // 100% uploaded
-            monitor(1)
-          }
+          // if (monitor) {
+          // 100% uploaded
+          //   monitor(1)
+          // }
           if (callback) {
-            callback(downloadURL)
+            callback(callback)
           }
-          resolve()
+          resolve(downloadURL)
         })
       },
     )
   })
 }
 
-export { responseHandler, uploadPictureToFirebase }
+export { responseHandler, uploadPictureToFirebase, getId }

@@ -1,69 +1,106 @@
 import React, {useState, useEffect} from 'react'
 
-import {withFirebase, RequireLogin} from './firebase'
+import {RequireLogin} from './firebase'
 import '../constants'
-import {ITEM_API, ROUTES} from '../constants'
-import {uploadPictureToFirebase} from '../utilities'
+import {ITEM_API, AUTH_API, ROUTES} from '../constants'
+import {uploadPictureToFirebase, responseHandler, getId} from '../utilities'
+import imageCompression from 'browser-image-compression'
+import {SelectedGeoLocationGlobal} from '../store'
 
 const UploadPage = ({history, firebase}) => {
   const [title, setItemTitle] = useState('')
   const [price, setItemPrice] = useState('')
   const [description, setItemDescription] = useState('')
-  const [photoUrls, setImgUrls] = useState([])
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadedFiles, setUploadedFiles] = useState([])
+  const [submitted, setSubmitted] = useState(false)
+  const [uploadCount, setUploadCount] = useState(0)
+  const {selectedGeoLocation} = SelectedGeoLocationGlobal.useContainer()
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
-    if (uploadProgress !== 100 || photoUrls.length == 0) {
-      return
-    }
-    fetch(ITEM_API, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        price,
-        title,
-        description,
-        photoUrls,
-        ownerId: firebase.auth.currentUser.uid
-      })
+    setSubmitted(true)
+    const todo = []
+    uploadedFiles.forEach(img => {
+      todo.push(
+        uploadPictureToFirebase(img, 'item_images', firebase, () => {
+          setUploadCount(uploadCount + 1)
+        })
+      )
     })
-      .then(rst => {
-        console.log('result', rst)
-        rst.json().then(data => console.log('json', data))
-        if (rst.ok) {
-          history.push(ROUTES.items)
-        }
+
+    Promise.all(todo)
+      .then(photoUrls => {
+        return fetch(ITEM_API, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            price,
+            title,
+            description,
+            photoUrls,
+            ownerId: firebase.auth.currentUser.uid,
+            location: selectedGeoLocation
+          })
+        })
       })
-      .catch(err => console.log('failed', err))
+      .then(responseHandler)
+      .then(({message}) => {
+        const newItemId = message.match(/(?<=document )[\w]+/)[0]
+        console.log(newItemId)
+        firebase.user(firebase.auth.currentUser.uid).update({
+          items: firebase.app.firestore.FieldValue.arrayUnion(newItemId)
+        })
+        history.push(ROUTES.home)
+      })
+
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   const handleImageUpload = event => {
-    uploadPictureToFirebase(
-      event.target.files[0],
-      'item_images',
-      firebase,
-      url => {
-        const oldUrls = photoUrls.slice()
-        setImgUrls(oldUrls.concat(url))
-      },
-      status => {
-        setUploadProgress(status * 100)
-      }
-    )
+    // console.log('aaa', event.target.files)
+    if (event.target.files.length === 0) return
+    const imageFile = event.target.files[0]
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`)
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true
+    }
+    imageCompression(imageFile, options)
+      .then(compressedFile => {
+        console.log(
+          `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+        ) // smaller than maxSizeMB
+        const oldFiles = uploadedFiles.slice()
+        setUploadedFiles(oldFiles.concat(compressedFile))
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
   }
 
   const renderProgress = () => {
-    if (uploadProgress === 0) return null
-    else if (uploadProgress == 100) return <h5>Image Uploaded</h5>
-    else return <h5>Uploading ... {uploadProgress} % ... </h5>
+    if (uploadedFiles.length === 0) return <h5>choose a picture to upload</h5>
+    const filenames = uploadedFiles.map(f => f.name)
+    if (submitted) {
+      if (uploadedFiles.length.length === uploadCount) {
+        return <h5>almost finished, redirecting to the homepage...</h5>
+      } else
+        return (
+          <h5>{`Uploading.... ${
+            uploadedFiles.length
+          } pictures to upload.. ${uploadCount} done... please wait`}</h5>
+        )
+    } else {
+      return <h5>{`Files to upload: ${filenames.join(', ')}`}</h5>
+    }
   }
 
   return (
-    <form
-      action="upload"
-      className="upload-form"
-      onSubmit={handleItemUploadSubmit}>
+    <form className="upload-form" onSubmit={handleItemUploadSubmit}>
       <input
         type="text"
         name="title"
@@ -102,14 +139,7 @@ const UploadPage = ({history, firebase}) => {
       />
       <label htmlFor="upload-img" id="upload-label" />
       {renderProgress()}
-      <button
-        type="submit"
-        className="upload-btn btn"
-        // disabled={!(uploadProgress === 100)}
-        // onClick={evt => {
-
-        // }}
-      >
+      <button type="submit" className="upload-btn btn">
         Publish
       </button>
     </form>
