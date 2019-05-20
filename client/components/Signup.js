@@ -45,18 +45,17 @@ const SignUp = props => {
       })
   }
 
-  const handleSignInSubmit = type => event => {
-    event.preventDefault()
+  const handleSignInSubmit = type => {
     switch (type) {
       case 'email':
         firebase.auth
           .signInWithEmailAndPassword(email, password)
-          .catch(({code, message}) => {
-            alert(code, message)
-          })
           .then(res => {
             console.log('login', res)
             history.push(ROUTES.items)
+          })
+          .catch(({code, message}) => {
+            alert(code, message)
           })
         break
       case 'google':
@@ -67,16 +66,19 @@ const SignUp = props => {
             history.push(ROUTES.items)
           })
           .catch(error => {
-            console.log(error)
+            alert(error)
           })
         break
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
+    e.preventDefault()
     if (btnType === 'signup') {
       handleSignUpSubmit()
     } else if (btnType === 'email') {
+      console.log('++++++++++++')
+
       handleSignInSubmit('email')
     } else if (btnType === 'google') {
       handleSignInSubmit('google')
@@ -124,18 +126,17 @@ const SignUp = props => {
         />
         <button
           type="submit"
-          className="btn-signup btn"
-          onClick={e => {
-            btnType = 'signup'
-            e.preventDefault()
-          }}>
-          Sign up now
-        </button>
-        <button
-          type="submit"
           className="btn-signin btn"
           onClick={() => (btnType = 'email')}>
           Sign In
+        </button>
+        <button
+          type="submit"
+          className="btn-signup btn"
+          onClick={e => {
+            btnType = 'signup'
+          }}>
+          Sign up now
         </button>
         <button
           className="btn-signin-google btn"
