@@ -15,12 +15,12 @@ const SignUp = props => {
 
   const validateInput = () => /^\w+@(\w+\.)+\w+$/.test(email) && password.length > 0
 
-  useEffect(() => {
-    const emailInput = emailRef.current
-    const passwordInput = passwordRef.current
-    console.log(emailInput.value, passwordInput)
-    setEmail(emailInput.value)
-  }, [])
+  // useEffect(() => {
+  //   const emailInput = emailRef.current
+  //   const passwordInput = passwordRef.current
+  //   console.log(emailInput.value, passwordInput)
+  //   setEmail(emailInput.value)
+  // }, [])
 
   const handleSignUpSubmit = () => {
     firebase.auth

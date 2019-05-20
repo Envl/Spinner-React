@@ -7,6 +7,7 @@ const responseHandler = res => {
   return res.json()
 }
 
+const getId = str => str.match(/(?<=document )[\w]+/)[0]
 const uploadPictureToFirebase = (fileObj, remoteFolder, firebase, callback = false, monitor = false) => {
   return new Promise((resolve, reject) => {
     const storageRef = firebase.storage().ref()
@@ -84,4 +85,4 @@ const uploadPictureToFirebase = (fileObj, remoteFolder, firebase, callback = fal
   })
 }
 
-export { responseHandler, uploadPictureToFirebase }
+export { responseHandler, uploadPictureToFirebase, getId }
