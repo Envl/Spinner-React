@@ -1,17 +1,27 @@
-import React, { useState } from 'react'
-import { createContainer } from 'unstated-next'
+import React, {useState} from 'react'
+import {createContainer} from 'unstated-next'
 
-const useCurrentUser = init => {
+const CurrentUserGlobal = createContainer(init => {
   const [currentUser, setCurrentUser] = useState(init)
-  return { currentUser, setCurrentUser }
-}
-const CurrentUserGlobal = createContainer(useCurrentUser)
+  return {currentUser, setCurrentUser}
+})
+// const CurrentUserGlobal = createContainer(useCurrentUser)
 
-const useSelectedGeoLocation = init => {
+const SelectedGeoLocationGlobal = createContainer(init => {
   const [selectedGeoLocation, setSelectedGeoLocation] = useState(init)
-  return { selectedGeoLocation, setSelectedGeoLocation }
-}
+  return {selectedGeoLocation, setSelectedGeoLocation}
+})
 
-const SelectedGeoLocationGlobal = createContainer(useSelectedGeoLocation)
+const FirebaseDataGlobal = createContainer(initial => {
+  console.log('iiiiiii', initial)
 
-export { CurrentUserGlobal, SelectedGeoLocationGlobal }
+  const [FirebaseData, _setFirebaseData] = useState({})
+  const setFirebaseData = newState => {
+    // newer be later, so to cover older
+    _setFirebaseData({...FirebaseData, ...newState})
+    console.log(FirebaseData, {...FirebaseData, ...newState})
+  }
+  return {FirebaseData, setFirebaseData}
+})
+
+export {CurrentUserGlobal, FirebaseDataGlobal, SelectedGeoLocationGlobal}

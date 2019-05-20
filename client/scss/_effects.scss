@@ -1,0 +1,6 @@
+@mixin hover-pointer-color($c) {
+  &:hover {
+    background: $c;
+    cursor: pointer;
+  }
+}
