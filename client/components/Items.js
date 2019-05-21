@@ -2,10 +2,54 @@ import {withFirebase, RequireLogin} from './firebase'
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {ROUTES, TRANSAC_API} from '../constants'
+import {CurrentUserGlobal} from '../store'
 
 const ItemGrid = ({item, onRequest, onDelete}) => {
+  const [requestStatus, setRequestStatus] = useState('')
+  const {currentUser} = CurrentUserGlobal.useContainer()
   const {title, price, description, photoUrls} = item
-  const [requested, setRequested] = useState(false)
+
+  const RequestBtn = onRequest && (
+    <button
+      className={
+        'btn btn-request ' +
+        (requestStatus === 'requested'
+          ? 'label-requested'
+          : requestStatus === 'no money'
+          ? 'label-warning'
+          : '')
+      }
+      onClick={() => {
+        if (requestStatus) {
+          return
+        }
+        if (currentUser && currentUser.points >= price) {
+          if (onRequest(item)) {
+            setRequestStatus('requested')
+          }
+        } else {
+          setRequestStatus('no money')
+        }
+      }}>
+      {requestStatus === 'no money'
+        ? 'Need more honey'
+        : requestStatus === 'requested'
+        ? 'Requested'
+        : 'Request'}
+    </button>
+  )
+
+  const DeleteBtn = onDelete && (
+    <button
+      className="btn btn-delete"
+      onClick={() => {
+        console.log('kkkkkkkkkk', item)
+
+        onDelete(item.id)
+      }}>
+      Delete
+    </button>
+  )
   return (
     <div className="product-item">
       <div className="text-info">
@@ -19,30 +63,8 @@ const ItemGrid = ({item, onRequest, onDelete}) => {
       </a>
       <span className="label label-warning">New</span>
       <span className="product-description">{description}</span>
-      {onRequest && (
-        <button
-          className={'btn btn-request ' + (requested ? 'label-requested' : '')}
-          onClick={() => {
-            if (requested) {
-              return
-            }
-            setRequested(true)
-            onRequest(item)
-          }}>
-          {requested ? 'Requested' : 'Request'}
-        </button>
-      )}
-      {onDelete && (
-        <button
-          className="btn btn-delete"
-          onClick={() => {
-            console.log('kkkkkkkkkk', item)
-
-            onDelete(item.id)
-          }}>
-          Delete
-        </button>
-      )}
+      {RequestBtn}
+      {DeleteBtn}
     </div>
   )
 }

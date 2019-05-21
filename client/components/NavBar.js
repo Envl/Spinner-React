@@ -81,6 +81,7 @@ const NavBar = ({firebase}) => {
                   <i className="far fa-user" />
                 </button>
               }>
+              <div>{currentUser.points} Honey Muffin</div>
               <Link to={ROUTES.homepage}>My Stuff</Link>
               <Link to={ROUTES.history}>Transactions</Link>
               <div onClick={handleSignOutClick}>Sign out</div>

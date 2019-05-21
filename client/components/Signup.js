@@ -30,7 +30,8 @@ const SignUp = props => {
             // username: username,
             id: authUser.user.uid,
             transactions: [],
-            items: []
+            items: [],
+            points: 0
           },
           {merge: true}
         )
@@ -61,8 +62,21 @@ const SignUp = props => {
       case 'google':
         firebase
           .authWithGoogle()
-          .then(res => {
-            console.log(res)
+          .then(({additionalUserInfo, user}) => {
+            // console.log('12232323', res)
+            if (additionalUserInfo.isNewUser) {
+              firebase.user(user.uid).set(
+                {
+                  email: user.email,
+                  // username: username,
+                  id: user.uid,
+                  transactions: [],
+                  items: [],
+                  points: 0
+                },
+                {merge: true}
+              )
+            }
             history.push('/')
           })
           .catch(error => {

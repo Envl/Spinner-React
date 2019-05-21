@@ -13,17 +13,19 @@ let fb = {}
 _app.initializeApp(config)
 _app.auth().onAuthStateChanged(authUser => {
   localStorage.setItem('currentUser', JSON.stringify(authUser))
-  fb.user(authUser.uid)
-    .get()
-    .then(doc => {
-      fb.myProfile = {
-        ...doc.data(),
-        emailVerified: authUser.emailVerified,
-        displayName: authUser.displayName,
-        photoURL: authUser.photoURL
-      }
-      console.log(fb.myProfile, 'ssss', authUser)
-    })
+  authUser &&
+    fb
+      .user(authUser.uid)
+      .get()
+      .then(doc => {
+        fb.myProfile = {
+          ...doc.data(),
+          emailVerified: authUser.emailVerified,
+          displayName: authUser.displayName,
+          photoURL: authUser.photoURL
+        }
+        console.log(fb.myProfile, 'ssss', authUser)
+      })
 })
 // shortcuts
 fb.app = _app
@@ -36,6 +38,8 @@ fb.user = uid => fb.fs.collection('users').doc(uid)
 fb.item = id => fb.fs.collection('items').doc(id)
 fb.allItem = id => fb.fs.collection('allItems').doc(id)
 fb.transaction = id => _app.firestore().doc(`transactions/${id}`)
+fb.allItem = id => fb.fs.doc(`allItems/${id}`)
+fb.item = id => fb.fs.doc(`items/${id}`)
 
 const googleAuthProvider = new _app.auth.GoogleAuthProvider()
 
