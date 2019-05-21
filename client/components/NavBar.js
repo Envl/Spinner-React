@@ -82,6 +82,7 @@ const NavBar = ({ firebase }) => {
                 </button>
               }
             >
+              <div>{currentUser.points} Honey Muffin</div>
               <Link to={ROUTES.history}>My Stuff</Link>
               <div onClick={handleSignOutClick}>Sign out</div>
             </DropDown>

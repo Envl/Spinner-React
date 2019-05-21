@@ -55,8 +55,10 @@
     margin: 0 20px;
     text-transform: capitalize;
   }
+
   @include smaller-than(sm) {
     flex-direction: column;
     justify-content: flex-start;
+    display: none;
   }
 }
