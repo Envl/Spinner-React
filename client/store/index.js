@@ -3,7 +3,7 @@ import { createContainer } from 'unstated-next'
 
 const CurrentUserGlobal = createContainer(init => {
   const [currentUser, setCurrentUser] = useState(init)
-  const setPoints = points => setCurrentUser({ ...currentUser, Points: points })
+  const setPoints = points => setCurrentUser({ ...currentUser, points })
   return { currentUser, setCurrentUser, setPoints }
 })
 // const CurrentUserGlobal = createContainer(useCurrentUser)
