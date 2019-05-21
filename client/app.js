@@ -13,11 +13,23 @@ import {CurrentUserGlobal} from './store'
 
 const app = props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
+  console.log('aaappapappapa')
 
-  props.firebase.auth.onAuthStateChanged(authUser => {
-    // console.log('on auth', authUser, '--------------------------')
-    setCurrentUser(authUser)
-  })
+  useEffect(() => {
+    props.firebase.auth.onAuthStateChanged(authUser => {
+      // console.log('on auth', authUser, '--------------------------')
+      setCurrentUser(authUser)
+      authUser &&
+        props.firebase
+          .user(authUser.uid)
+          .get()
+          .then(u => {
+            console.log('000000000000')
+
+            setCurrentUser({...authUser, myPoints: u.data().points})
+          })
+    })
+  }, [])
 
   return (
     <BrowserRouter>

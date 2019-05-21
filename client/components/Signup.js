@@ -30,7 +30,8 @@ const SignUp = props => {
             // username: username,
             id: authUser.user.uid,
             transactions: [],
-            items: []
+            items: [],
+            points: 0
           },
           {merge: true}
         )

@@ -13,17 +13,19 @@ let fb = {}
 _app.initializeApp(config)
 _app.auth().onAuthStateChanged(authUser => {
   localStorage.setItem('currentUser', JSON.stringify(authUser))
-  fb.user(authUser.uid)
-    .get()
-    .then(doc => {
-      fb.myProfile = {
-        ...doc.data(),
-        emailVerified: authUser.emailVerified,
-        displayName: authUser.displayName,
-        photoURL: authUser.photoURL
-      }
-      console.log(fb.myProfile, 'ssss', authUser)
-    })
+  authUser &&
+    fb
+      .user(authUser.uid)
+      .get()
+      .then(doc => {
+        fb.myProfile = {
+          ...doc.data(),
+          emailVerified: authUser.emailVerified,
+          displayName: authUser.displayName,
+          photoURL: authUser.photoURL
+        }
+        console.log(fb.myProfile, 'ssss', authUser)
+      })
 })
 // shortcuts
 fb.app = _app

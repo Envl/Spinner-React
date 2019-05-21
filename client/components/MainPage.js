@@ -47,9 +47,9 @@ const MainPage = props => {
           },
           body: JSON.stringify({
             consumerId: props.firebase.auth.currentUser.uid,
-            consumer: users[0],
+            consumer: users[0], //current user
             providerId: item.ownerId,
-            provider: users[1],
+            provider: users[1], // owner
             itemId: item.id,
             item,
             status: 'waiting',

@@ -2,10 +2,14 @@ import {withFirebase, RequireLogin} from './firebase'
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {ROUTES, TRANSAC_API} from '../constants'
+import {CurrentUserGlobal} from '../store'
 
 const ItemGrid = ({item, onRequest}) => {
+  const {currentUser} = CurrentUserGlobal.useContainer()
+
   const {title, price, description, photoUrls} = item
-  const [requested, setRequested] = useState(false)
+  const [requestStatus, setRequestStatus] = useState('')
+
   return (
     <div className="product-item">
       <div className="text-info">
@@ -20,15 +24,30 @@ const ItemGrid = ({item, onRequest}) => {
       <span className="label label-warning">New</span>
       <span className="product-description">{description}</span>
       <button
-        className={'btn btn-request ' + (requested ? 'label-requested' : '')}
+        className={
+          'btn btn-request ' +
+          (requestStatus === 'requested'
+            ? 'label-requested'
+            : requestStatus === 'no money'
+            ? 'label-warning'
+            : '')
+        }
         onClick={() => {
-          if (requested) {
+          if (requestStatus) {
             return
           }
-          setRequested(true)
+          if (currentUser && currentUser.myPoints >= price) {
+            setRequestStatus('requested')
+          } else {
+            setRequestStatus('no money')
+          }
           onRequest(item)
         }}>
-        {requested ? 'Requested' : 'Request'}
+        {requestStatus === 'no money'
+          ? 'Need more honey'
+          : requestStatus === 'requested'
+          ? 'Requested'
+          : 'Request'}
       </button>
     </div>
   )
