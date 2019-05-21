@@ -13,9 +13,7 @@ const SelectedGeoLocationGlobal = createContainer(init => {
   return { selectedGeoLocation, setSelectedGeoLocation }
 })
 
-const FirebaseDataGlobal = createContainer(initial => {
-  console.log('iiiiiii', initial)
-
+const FirebaseDataGlobal = createContainer(() => {
   const [FirebaseData, _setFirebaseData] = useState({})
   const setFirebaseData = newState => {
     // newer be later, so to cover older

@@ -1,0 +1,44 @@
+.landing-page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+
+  .logo-top {
+    background: url(../assets/img/logo.png) no-repeat;
+    height: 50px;
+    width: 96px;
+    position: fixed;
+    left: 35px;
+    top: 10px;
+  }
+  .blue-path {
+    width: 80%;
+    position: fixed;
+    right: 0px;
+    z-index: -1;
+    top: -140px;
+  }
+  .text-wrapper {
+    margin: 160px 0 0 50px;
+    h1 {
+      text-transform: capitalize;
+    }
+  }
+  .items {
+    width: 59%;
+    right: 12%;
+    position: absolute;
+    top: 5%;
+  }
+  .poster-wrapper {
+    height: fit-content;
+  }
+  .intro-list {
+    margin: 0 0 0 10px;
+  }
+  .btn-landing-explore {
+    margin: 55px 0 0 0;
+    width: 120px;
+  }
+}

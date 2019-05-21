@@ -50,7 +50,7 @@ const DropDown = props => {
   )
 }
 DropDown.propTypes = {
-  title: PropTypes.object
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 }
 
 export default DropDown
