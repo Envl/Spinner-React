@@ -38,7 +38,7 @@ const SignUp = props => {
       .then(() => {
         console.log('aaaaaaaaaaaaaaafete')
         debugger
-        history.push(ROUTES.items)
+        history.push('/')
       })
       .catch(error => {
         console.log(`${error.message}`)
@@ -52,7 +52,7 @@ const SignUp = props => {
           .signInWithEmailAndPassword(email, password)
           .then(res => {
             console.log('login', res)
-            history.push(ROUTES.items)
+            history.push('/')
           })
           .catch(({code, message}) => {
             alert(code, message)
@@ -63,7 +63,7 @@ const SignUp = props => {
           .authWithGoogle()
           .then(res => {
             console.log(res)
-            history.push(ROUTES.items)
+            history.push('/')
           })
           .catch(error => {
             alert(error)

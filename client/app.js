@@ -31,7 +31,6 @@ const app = props => {
       <Switch>
         <Route
           path={ROUTES.landing}
-          exact
           render={localProps => <LandingPage {...localProps} />}
         />
 
@@ -40,7 +39,8 @@ const app = props => {
           render={localProps => WithNavBar(<Signup {...localProps} />)}
         />
         <Route
-          path={ROUTES.items}
+          path={'/'}
+          exact
           render={localProps => WithNavBar(<MainPage {...localProps} />)}
         />
         <Route

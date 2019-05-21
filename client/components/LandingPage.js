@@ -25,7 +25,7 @@ const LandingPage = props => {
             <li className="list-item">Sustainable living</li>
             <li className="list-item">Global access</li>
           </div>
-          <Link to={ROUTES.items} className="btn btn-landing-explore">
+          <Link to={'/'} className="btn btn-landing-explore">
             Start Explore
           </Link>
         </div>

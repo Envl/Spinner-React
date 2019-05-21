@@ -30,8 +30,11 @@ fb.app = _app
 _app.auth().languageCode = 'en'
 fb.auth = _app.auth()
 fb.fs = _app.firestore()
+
 fb.storage = _app.storage
 fb.user = uid => fb.fs.collection('users').doc(uid)
+fb.item = id => fb.fs.collection('items').doc(id)
+fb.allItem = id => fb.fs.collection('allItems').doc(id)
 fb.transaction = id => _app.firestore().doc(`transactions/${id}`)
 
 const googleAuthProvider = new _app.auth.GoogleAuthProvider()

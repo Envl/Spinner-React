@@ -3,10 +3,13 @@ import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 
 import {ROUTES, TRANSAC_API} from '../constants'
+// import {FirebaseDataGlobal} from '../store'
 import Items from './Items'
 
 const MainPage = props => {
   const [items, setItems] = useState([])
+  // const {FirebaseData, setFirebaseData} = FirebaseDataGlobal.useContainer()
+
   useEffect(() => {
     props.firebase.fs
       .collection('items')

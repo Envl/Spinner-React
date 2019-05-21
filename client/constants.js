@@ -1,6 +1,5 @@
 const ROUTES = {
   home: '/',
-  items: '/items',
   upload: '/upload',
   signup: '/signup',
   history: '/history',

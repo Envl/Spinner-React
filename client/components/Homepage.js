@@ -1,13 +1,16 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
+import {RequireLogin} from './firebase'
 import DropDown from './DropDown'
 import Items from './Items'
+import HistoryPage from './HistoryPage'
+import {FirebaseDataGlobal} from '../store'
 
 const Sidebar = props => (
   <div className="sidebar">
     {[
       {title: 'timeline'},
-      {title: 'items', children: ['bought', 'on-shelf', 'sold']},
+      {title: 'items', children: ['bought', 'on-shelf', 'sold', 'ongoing']},
       {title: 'profile'},
       {title: 'settings'}
     ].map(li => (
@@ -15,6 +18,7 @@ const Sidebar = props => (
         title={li.title}
         noPop={true}
         isOpen
+        key={li.title}
         // onClick={evt => {
         //   switch (evt.target.innerHTML) {
         //     case 'bought':
@@ -31,10 +35,7 @@ const Sidebar = props => (
       >
         {li.children &&
           li.children.map(child => (
-            <button
-              onClick={() => {
-                console.log('clicked', child)
-              }}>
+            <button onClick={() => props.onClick(child)} key={child}>
               {child}
             </button>
           ))}
@@ -44,14 +45,46 @@ const Sidebar = props => (
 )
 
 const Homepage = props => {
+  const [contentType, setContentType] = useState('on-shelf')
+  // const {FirebaseData, setFirebaseData} = FirebaseDataGlobal.useContainer()
+  const [myItems, setMyItems] = useState([])
+
+  console.log('aaaaa', props.firebase)
+
+  useEffect(() => {
+    console.log('44444444444444444444')
+
+    let tmp = []
+    props.firebase.fs
+      .collection('items')
+      .where('ownerId', '==', props.firebase.auth.currentUser.uid)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          tmp.push(doc.data())
+        })
+        console.log('mmmmmmm', tmp)
+        setMyItems(tmp)
+        // setFirebaseData({myItems: tmp})
+      })
+  }, [])
+
   return (
     <div className="homepage-container">
-      <Sidebar />
+      <Sidebar onClick={setContentType} />
       <div className="content-panel">
-        <Items />
+        <Items
+          items={myItems}
+          onDelete={id => {
+            props.firebase.item(id).delete()
+            props.firebase.allItem(id).delete()
+            setMyItems(myItems.filter(item => item.id != id))
+          }}
+        />
+        {/* <HistoryPage firebase={props.firebase} /> */}
       </div>
     </div>
   )
 }
 
-export default Homepage
+export default RequireLogin(Homepage)
