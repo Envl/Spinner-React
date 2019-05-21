@@ -16,20 +16,20 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
       item: {price, id: itemId},
       id,
       consumerId,
-      consumer: {points: consumerPoints}
+      consumer: {points: consumerPoints},
     } = msg
     setShowOptions(false)
     switch (status) {
       case 'accepted':
         console.log(
-          firebase.transaction(id).update({status}) instanceof Promise
+          firebase.transaction(id).update({status}) instanceof Promise,
         )
         Promise.all([
           firebase.transaction(id).update({status}),
           firebase.user(providerId).update({
-            points: providerPoints + price
+            points: providerPoints + price,
           }),
-          firebase.item(itemId).delete()
+          firebase.item(itemId).delete(),
         ])
           .then(() => {
             setPoints(providerPoints + price)
@@ -43,13 +43,13 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
         break
       case 'declined':
         console.log(
-          firebase.transaction(id).update({status}) instanceof Promise
+          firebase.transaction(id).update({status}) instanceof Promise,
         )
         Promise.all([
           firebase.transaction(id).update({status}),
           firebase.user(consumerId).update({
-            points: consumerPoints + price
-          })
+            points: consumerPoints + price,
+          }),
         ])
           .then(() => {
             SetStatus(status)
@@ -67,12 +67,12 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
   }
 
   return (
-    <div className="msg-item" key={msg.id}>
-      <img src={msg.item.photoUrls && msg.item.photoUrls[0]} alt="" />
-      <div className="info">
+    <div className='msg-item' key={msg.id}>
+      <img src={msg.item.photoUrls && msg.item.photoUrls[0]} alt='' />
+      <div className='info'>
         <h3>{msg.item.title}</h3>
-        <div className="status">{status}</div>
-        <div className="people">
+        <div className='status'>{status}</div>
+        <div className='people'>
           {status === 'accepted' &&
             (myUid !== msg.consumerId ? (
               <a href={`mailto:${msg.consumer.email}`}>{msg.consumer.email}</a>
@@ -82,14 +82,14 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
         </div>
         {//-----Operation Btns ---------------
         myUid === msg.providerId && msg.status === 'waiting' && showOptions && (
-          <div className="operation">
+          <div className='operation'>
             <button
-              className="btn btn-yes"
+              className='btn btn-yes'
               onClick={() => setTransacStatus('accepted')}>
               Accept
             </button>
             <button
-              className="btn btn-no"
+              className='btn btn-no'
               onClick={() => setTransacStatus('declined')}>
               Decline
             </button>
@@ -114,8 +114,8 @@ const HistoryPage = props => {
       .get()
       .then(doc =>
         Promise.all(
-          doc.data().transactions.map(t => props.firebase.transaction(t).get())
-        )
+          doc.data().transactions.map(t => props.firebase.transaction(t).get()),
+        ),
       )
       .then(transacs => {
         // debugger
@@ -131,7 +131,7 @@ const HistoryPage = props => {
   }, [])
 
   return (
-    <div className="history-page">
+    <div className='history-page'>
       {FirebaseData &&
         FirebaseData.histories &&
         FirebaseData.histories

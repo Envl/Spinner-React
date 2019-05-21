@@ -10,28 +10,58 @@ import Items from './Items'
 const MainPage = props => {
   const [items, setItems] = useState([])
   // const {FirebaseData, setFirebaseData} = FirebaseDataGlobal.useContainer()
-  const {setPoints} = CurrentUserGlobal.useContainer()
+  const {currentUser, setPoints} = CurrentUserGlobal.useContainer()
 
   useEffect(() => {
-    props.firebase.fs
-      .collection('items')
-      .get()
-      .then(rsl => {
-        let itemArr = []
-        rsl.forEach(e => itemArr.push({...e.data(), id: e.id}))
-        setItems(itemArr)
+    let myTrscIds = []
+    let itms = []
+    console.log('@##@', currentUser)
+
+    if (currentUser) {
+      console.log('***********')
+      Promise.all([
+        props.firebase.fs
+          .collection('transactions')
+          .where('consumerId', '==', props.firebase.auth.currentUser.uid)
+          .get(),
+        props.firebase.fs.collection('items').get(),
+      ]).then(([snapshot1, snapshot2]) => {
+        snapshot1.forEach(doc => {
+          myTrscIds.push(doc.data().itemId)
+        })
+        snapshot2.forEach(e => itms.push({...e.data(), id: e.id}))
+        itms.forEach(item => {
+          if (myTrscIds.includes(item.id)) {
+            item.btnState = 'requested'
+          } else {
+            item.btnState = 'request'
+          }
+        })
+        console.log(itms)
+        setItems(itms)
       })
-      .catch(error => {
-        console.log(error)
-      })
-  }, [])
+    } else {
+      props.firebase.fs
+        .collection('items')
+        .get()
+        .then(rsl => {
+          let itemArr = []
+          rsl.forEach(e => itemArr.push({...e.data(), id: e.id}))
+          setItems(itemArr)
+        })
+    }
+  }, [currentUser])
 
   async function onRequest(item) {
     let flag = false
     if (!props.firebase.auth.currentUser) {
+      console.log(',,,,,,,,,,,,,,,,,')
+
       props.history.push(ROUTES.signup)
       return flag
     }
+    console.log('................')
+
     await Promise.all([
       props.firebase
         .user(props.firebase.auth.currentUser.uid)
@@ -40,7 +70,7 @@ const MainPage = props => {
       props.firebase
         .user(item.ownerId)
         .get()
-        .then(doc => doc.data())
+        .then(doc => doc.data()),
     ]).then(users => {
       console.log('usrs', users)
       if (
@@ -55,7 +85,7 @@ const MainPage = props => {
           {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               consumerId: props.firebase.auth.currentUser.uid,
@@ -65,9 +95,9 @@ const MainPage = props => {
               itemId: item.id,
               item,
               status: 'waiting',
-              timestamp: Date.now()
-            })
-          }
+              timestamp: Date.now(),
+            }),
+          },
         )
           .then(responseHandler)
           .then(data => {
@@ -76,20 +106,20 @@ const MainPage = props => {
               'me',
               props.firebase.auth.currentUser.uid,
               'you',
-              item.ownerId
+              item.ownerId,
             )
             setPoints(users[0].points - item.price)
             props.firebase.user(props.firebase.auth.currentUser.uid).update({
               transactions: props.firebase.app.firestore.FieldValue.arrayUnion(
-                item.id + props.firebase.auth.currentUser.uid
+                item.id + props.firebase.auth.currentUser.uid,
               ),
-              points: users[0].points - item.price
+              points: users[0].points - item.price,
             })
 
             props.firebase.user(item.ownerId).update({
               transactions: props.firebase.app.firestore.FieldValue.arrayUnion(
-                item.id + props.firebase.auth.currentUser.uid
-              )
+                item.id + props.firebase.auth.currentUser.uid,
+              ),
             })
           })
           .catch(err => console.log('failed', err))
@@ -101,7 +131,7 @@ const MainPage = props => {
   }
 
   return (
-    <div className="product-page">
+    <div className='product-page'>
       <Items items={items} onRequest={onRequest} />
     </div>
   )

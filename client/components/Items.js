@@ -4,8 +4,8 @@ import {Link} from 'react-router-dom'
 import {ROUTES, TRANSAC_API} from '../constants'
 import {CurrentUserGlobal} from '../store'
 
-const ItemGrid = ({item, onRequest, onDelete}) => {
-  const [requestStatus, setRequestStatus] = useState('')
+const ItemGrid = ({item, onRequest, onDelete, btnState}) => {
+  const [requestStatus, setRequestStatus] = useState(btnState)
   const {currentUser} = CurrentUserGlobal.useContainer()
   const {title, price, description, photoUrls} = item
 
@@ -23,7 +23,11 @@ const ItemGrid = ({item, onRequest, onDelete}) => {
         if (requestStatus) {
           return
         }
-        if (currentUser && currentUser.points >= price) {
+        if (!currentUser) {
+          onRequest(item)
+        } else if (currentUser.points >= price) {
+          console.log('before........')
+
           if (onRequest(item)) {
             setRequestStatus('requested')
           }
@@ -41,7 +45,7 @@ const ItemGrid = ({item, onRequest, onDelete}) => {
 
   const DeleteBtn = onDelete && (
     <button
-      className="btn btn-delete"
+      className='btn btn-delete'
       onClick={() => {
         console.log('kkkkkkkkkk', item)
 
@@ -51,18 +55,18 @@ const ItemGrid = ({item, onRequest, onDelete}) => {
     </button>
   )
   return (
-    <div className="product-item">
-      <div className="text-info">
-        <h2 className="title">
+    <div className='product-item'>
+      <div className='text-info'>
+        <h2 className='title'>
           <a>{title}</a>
         </h2>
         <sup>{price}Honey Muffin</sup>
       </div>
-      <a className="product-img">
-        <img src={photoUrls && photoUrls[0]} alt="" />
+      <a className='product-img'>
+        <img src={photoUrls && photoUrls[0]} alt='' />
       </a>
-      <span className="label label-warning">New</span>
-      <span className="product-description">{description}</span>
+      <span className='label label-warning'>New</span>
+      <span className='product-description'>{description}</span>
       {RequestBtn}
       {DeleteBtn}
     </div>
@@ -71,7 +75,7 @@ const ItemGrid = ({item, onRequest, onDelete}) => {
 
 const Items = ({items, onRequest, onDelete}) => {
   return (
-    <div className="items-container">
+    <div className='items-container'>
       {items &&
         items.map(item => {
           return (
@@ -80,13 +84,14 @@ const Items = ({items, onRequest, onDelete}) => {
               key={item.id + Math.random()}
               onRequest={onRequest}
               onDelete={onDelete}
+              btnState={item.btnState}
             />
           )
         })}
       {[1, 2, 3, 4].map(() => (
-        <div className="zero-height product-item" key={Math.random()} />
+        <div className='zero-height product-item' key={Math.random()} />
       ))}
-      <a href="/upload" className="btn btn-add">
+      <a href='/upload' className='btn btn-add'>
         Upload
       </a>
     </div>
