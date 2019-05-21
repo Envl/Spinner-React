@@ -45,7 +45,7 @@ const withFirebase = Component => props => (
   <Component {...props} firebase={fb} />
 )
 
-const RequireLogin = Component => props => {
+const RequireLogin = (Component, dest = ROUTES.signup) => props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
 
   console.log('in require login', currentUser)
@@ -56,7 +56,7 @@ const RequireLogin = Component => props => {
       'Loading '
     )
   ) : (
-    <Redirect to={{pathname: ROUTES.signup}} />
+    <Redirect to={{pathname: dest}} />
   )
 }
 

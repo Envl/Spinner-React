@@ -4,7 +4,8 @@ const ROUTES = {
   upload: '/upload',
   signup: '/signup',
   history: '/history',
-  homepage: '/homepage'
+  homepage: '/homepage',
+  landing: '/landing'
 }
 
 const AUTH_API = 'https://us-central1-spinner-stuff.cloudfunctions.net/api_user'
