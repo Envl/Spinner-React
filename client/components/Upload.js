@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { RequireLogin } from './firebase'
 import '../constants'
-import { ITEM_API, AUTH_API, ROUTES } from '../constants'
+import { ITEM_API, AUTH_API, ROUTES, ALL_ITEM_API } from '../constants'
 import { uploadPictureToFirebase, responseHandler, getId } from '../utilities'
 import imageCompression from 'browser-image-compression'
 import { SelectedGeoLocationGlobal } from '../store'
@@ -28,8 +28,10 @@ const UploadPage = ({ history, firebase }) => {
       )
     })
 
+    let photoUrls
     Promise.all(todo)
-      .then(photoUrls => {
+      .then(_photoUrls => {
+        photoUrls = _photoUrls
         return fetch(ITEM_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -37,7 +39,7 @@ const UploadPage = ({ history, firebase }) => {
             price: parseInt(price),
             title,
             description,
-            photoUrls,
+            photoUrls: _photoUrls,
             ownerId: firebase.auth.currentUser.uid,
             location: selectedGeoLocation,
           }),
@@ -47,12 +49,25 @@ const UploadPage = ({ history, firebase }) => {
       .then(({ message }) => {
         const newItemId = message.match(/(?<=document )[\w]+/)[0]
         console.log(newItemId)
-        firebase.user(firebase.auth.currentUser.uid).update({
-          items: firebase.app.firestore.FieldValue.arrayUnion(newItemId),
-        })
+        return Promise.all([
+          firebase.user(firebase.auth.currentUser.uid).update({
+            items: firebase.app.firestore.FieldValue.arrayUnion(newItemId),
+          }),
+          firebase.allItem(newItemId).set({
+            price: parseInt(price),
+            title,
+            description,
+            photoUrls,
+            ownerId: firebase.auth.currentUser.uid,
+            location: selectedGeoLocation,
+            id: newItemId,
+          }),
+        ])
+      })
+      .then(responseHandler)
+      .then(() => {
         history.push(ROUTES.home)
       })
-
       .catch(error => {
         console.log(error)
       })

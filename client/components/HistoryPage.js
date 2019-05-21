@@ -13,7 +13,7 @@ const HistoryMsg = ({ msg, myUid, firebase }) => {
     const {
       provider: { points: providerPoints },
       providerId,
-      item: { price },
+      item: { price, id: itemId },
       id,
       consumerId,
       consumer: { points: consumerPoints },
@@ -27,6 +27,7 @@ const HistoryMsg = ({ msg, myUid, firebase }) => {
           firebase.user(providerId).update({
             points: providerPoints + price,
           }),
+          firebase.item(itemId).delete(),
         ])
           .then(() => {
             setPoints(providerPoints + price)
