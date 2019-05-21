@@ -62,6 +62,12 @@ const UploadPage = ({ history, firebase }) => {
             location: selectedGeoLocation,
             id: newItemId,
           }),
+          firebase.item(newItemId).set(
+            {
+              id: newItemId,
+            },
+            { merge: true },
+          ),
         ])
       })
       .then(responseHandler)
