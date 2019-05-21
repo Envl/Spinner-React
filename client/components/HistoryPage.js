@@ -67,7 +67,13 @@ const HistoryMsg = ({ msg, myUid, firebase }) => {
       <div className='info'>
         <h3>{msg.item.title}</h3>
         <div className='status'>{status}</div>
-        <div className='people'>{myUid !== msg.consumerId ? msg.consumer.email : msg.provider.email}</div>
+        <div className='people'>
+          {myUid !== msg.consumerId ? (
+            <a href={`mailto:${msg.consumer.email}`}>{msg.consumer.email}</a>
+          ) : (
+            <a href={`mailto:${msg.provider.email}`}>{msg.provider.email}</a>
+          )}
+        </div>
         {//-----Operation Btns ---------------
         myUid === msg.providerId && msg.status === 'waiting' && showOptions && (
           <div className='operation'>
