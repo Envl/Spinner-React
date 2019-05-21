@@ -25,7 +25,6 @@ const app = props => {
           .get()
           .then(u => {
             console.log('000000000000')
-
             setCurrentUser({...authUser, myPoints: u.data().points})
           })
     })

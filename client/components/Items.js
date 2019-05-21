@@ -38,10 +38,10 @@ const ItemGrid = ({item, onRequest}) => {
           }
           if (currentUser && currentUser.myPoints >= price) {
             setRequestStatus('requested')
+            onRequest(item)
           } else {
             setRequestStatus('no money')
           }
-          onRequest(item)
         }}>
         {requestStatus === 'no money'
           ? 'Need more honey'
