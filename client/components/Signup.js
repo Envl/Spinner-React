@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react'
-import {withFirebase} from './firebase'
-import {ROUTES} from '../constants'
+import React, { useState, useEffect } from 'react'
+import { withFirebase } from './firebase'
+import { ROUTES } from '../constants'
 
 const SignUp = props => {
   const [email, setEmail] = useState('')
@@ -11,7 +11,7 @@ const SignUp = props => {
   // const emailRef = React.createRef()
   // const passwordRef = React.createRef()
 
-  const {firebase, history} = props
+  const { firebase, history } = props
 
   // useEffect(() => {
   //   const emailInput = emailRef.current
@@ -31,10 +31,10 @@ const SignUp = props => {
             id: authUser.user.uid,
             transactions: [],
             items: [],
-            points: 0
+            points: 0,
           },
-          {merge: true}
-        )
+          { merge: true },
+        ),
       )
       .then(() => {
         console.log('aaaaaaaaaaaaaaafete')
@@ -55,15 +55,28 @@ const SignUp = props => {
             console.log('login', res)
             history.push(ROUTES.items)
           })
-          .catch(({code, message}) => {
+          .catch(({ code, message }) => {
             alert(code, message)
           })
         break
       case 'google':
         firebase
           .authWithGoogle()
-          .then(res => {
-            console.log(res)
+          .then(({ additionalUserInfo, user }) => {
+            // console.log('12232323', res)
+            if (additionalUserInfo.isNewUser) {
+              firebase.user(user.uid).set(
+                {
+                  email: user.email,
+                  // username: username,
+                  id: user.uid,
+                  transactions: [],
+                  items: [],
+                  points: 0,
+                },
+                { merge: true },
+              )
+            }
             history.push(ROUTES.items)
           })
           .catch(error => {
@@ -87,18 +100,18 @@ const SignUp = props => {
   }
 
   return (
-    <div className="sign-up-form-group">
-      <form autoComplete="on" onSubmit={handleSubmit}>
-        <label htmlFor="email">Email </label>
+    <div className='sign-up-form-group'>
+      <form autoComplete='on' onSubmit={handleSubmit}>
+        <label htmlFor='email'>Email </label>
         <input
-          id="register-email-input"
-          type="email"
-          name="email"
+          id='register-email-input'
+          type='email'
+          name='email'
           value={email}
           required
-          autoComplete="on"
+          autoComplete='on'
           // ref={emailRef}
-          placeholder="Email: *"
+          placeholder='Email: *'
           onChange={e => setEmail(e.target.value)}
         />
         {/* <label htmlFor='password'>Username</label>
@@ -113,35 +126,31 @@ const SignUp = props => {
           setUsername(event.target.value)
         }}
       /> */}
-        <label htmlFor="password">Password</label>
+        <label htmlFor='password'>Password</label>
         <input
-          id="register-password-input"
-          name="password"
-          type="password"
+          id='register-password-input'
+          name='password'
+          type='password'
           value={password}
           required
-          placeholder="Password"
-          autoComplete="on"
+          placeholder='Password'
+          autoComplete='on'
           // ref={passwordRef}
           onChange={e => setPassword(e.target.value)}
         />
-        <button
-          type="submit"
-          className="btn-signin btn"
-          onClick={() => (btnType = 'email')}>
+        <button type='submit' className='btn-signin btn' onClick={() => (btnType = 'email')}>
           Sign In
         </button>
         <button
-          type="submit"
-          className="btn-signup btn"
+          type='submit'
+          className='btn-signup btn'
           onClick={e => {
             btnType = 'signup'
-          }}>
+          }}
+        >
           Sign up now
         </button>
-        <button
-          className="btn-signin-google btn"
-          onClick={() => (btnType = 'google')}>
+        <button className='btn-signin-google btn' onClick={() => (btnType = 'google')}>
           Or sign in with Google
         </button>
       </form>
