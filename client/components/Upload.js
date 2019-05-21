@@ -49,7 +49,7 @@ const UploadPage = ({ history, firebase }) => {
       .then(({ message }) => {
         const newItemId = message.match(/(?<=document )[\w]+/)[0]
         console.log(newItemId)
-        return Promise.all([
+        Promise.all([
           firebase.user(firebase.auth.currentUser.uid).update({
             items: firebase.app.firestore.FieldValue.arrayUnion(newItemId),
           }),
@@ -64,7 +64,6 @@ const UploadPage = ({ history, firebase }) => {
           }),
         ])
       })
-      .then(responseHandler)
       .then(() => {
         history.push(ROUTES.home)
       })
