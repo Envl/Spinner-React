@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { withFirebase } from './firebase'
-import { ROUTES } from '../constants'
+import React, {useState, useEffect} from 'react'
+import {withFirebase} from './firebase'
+import {ROUTES} from '../constants'
 
 const SignUp = props => {
   const [email, setEmail] = useState('')
@@ -11,7 +11,7 @@ const SignUp = props => {
   // const emailRef = React.createRef()
   // const passwordRef = React.createRef()
 
-  const { firebase, history } = props
+  const {firebase, history} = props
 
   // useEffect(() => {
   //   const emailInput = emailRef.current
@@ -38,7 +38,7 @@ const SignUp = props => {
             items: [],
             points: 100,
           },
-          { merge: true },
+          {merge: true},
         )
       })
       .then(() => {
@@ -60,14 +60,14 @@ const SignUp = props => {
             console.log('login', res)
             history.push('/')
           })
-          .catch(({ code, message }) => {
+          .catch(({code, message}) => {
             alert(code, message)
           })
         break
       case 'google':
         firebase
           .authWithGoogle()
-          .then(({ additionalUserInfo, user }) => {
+          .then(({additionalUserInfo, user}) => {
             // console.log('12232323', res)
             if (additionalUserInfo.isNewUser) {
               firebase.user(user.uid).set(
@@ -79,7 +79,7 @@ const SignUp = props => {
                   items: [],
                   points: 100,
                 },
-                { merge: true },
+                {merge: true},
               )
             }
             history.push('/')
@@ -103,7 +103,7 @@ const SignUp = props => {
   }
 
   return (
-    <div className='sign-up-form-group'>
+    <div className='signup-page'>
       <form autoComplete='on' onSubmit={handleSubmit}>
         <label htmlFor='email'>Email </label>
         <input
@@ -141,25 +141,28 @@ const SignUp = props => {
           // ref={passwordRef}
           onChange={e => setPassword(e.target.value)}
         />
-        <button type='submit' className='btn-signin btn' onClick={() => (btnType = 'email')}>
-          Sign In
-        </button>
-        <button
-          type='submit'
-          className='btn-signup btn'
-          onClick={e => {
-            btnType = 'signup'
-          }}
-        >
-          Sign up now
-        </button>
+        <div className='email-login'>
+          <button
+            type='submit'
+            className='btn-signin btn'
+            onClick={() => (btnType = 'email')}>
+            Sign In
+          </button>
+          <button
+            type='submit'
+            className='btn-signup btn'
+            onClick={e => {
+              btnType = 'signup'
+            }}>
+            Sign up now
+          </button>
+        </div>
       </form>
       <button
-        className='btn-signin-google btn'
+        className='btn-google btn'
         onClick={() => {
           handleSignInSubmit('google')
-        }}
-      >
+        }}>
         Or sign in with Google
       </button>
     </div>

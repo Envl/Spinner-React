@@ -9,7 +9,9 @@
   margin: 18px 9px 0 9px;
   border-radius: 6px;
   @include hover-show('.btn-request');
+  @include hover-show('.btn-delete');
   @include hover-offset('.btn-request', 0, -15px);
+  @include hover-offset('.btn-delete', 0, -15px);
   &:hover {
     transition: all ease-in;
     & :not(button) {
@@ -23,10 +25,20 @@
   }
 
   .text-info {
-    padding: 10px 0 0 20px;
+    padding: 0 0 5px 20px;
     height: 70px;
     .title {
       margin: 5px 0;
+      font-size: 1.2rem;
+      height: 2.6rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      a {
+        height: 2.6rem;
+      }
+    }
+    .fa-coins {
+      margin-right: 5px;
     }
   }
 }
@@ -48,7 +60,7 @@
   // max-height: 36px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
 }
 
 .label-warning {

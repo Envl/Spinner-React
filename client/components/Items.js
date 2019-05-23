@@ -20,10 +20,16 @@ const ItemGrid = ({item, onRequest, onDelete, btnState}) => {
           : '')
       }
       onClick={() => {
-        if (requestStatus) {
+        console.log('clicked', requestStatus)
+
+        if (requestStatus !== 'request' || currentUser.uid === item.ownerId) {
           return
         }
+        console.log('not returened')
+
         if (!currentUser) {
+          console.log('before onReq')
+
           onRequest(item)
         } else if (currentUser.points >= price) {
           console.log('before........')
@@ -35,7 +41,9 @@ const ItemGrid = ({item, onRequest, onDelete, btnState}) => {
           setRequestStatus('no money')
         }
       }}>
-      {requestStatus === 'no money'
+      {currentUser.uid === item.ownerId
+        ? 'Mine'
+        : requestStatus === 'no money'
         ? 'Need more honey'
         : requestStatus === 'requested'
         ? 'Requested'
@@ -60,7 +68,10 @@ const ItemGrid = ({item, onRequest, onDelete, btnState}) => {
         <h2 className='title'>
           <a>{title}</a>
         </h2>
-        <sup>{price}Honey Muffin</sup>
+        <sup>
+          <i class='fas fa-coins' />
+          {price}
+        </sup>
       </div>
       <a className='product-img'>
         <img src={photoUrls && photoUrls[0]} alt='' />

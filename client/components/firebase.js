@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Redirect} from 'react-router-dom'
 import _app from 'firebase/app'
 import 'firebase/auth'
@@ -22,7 +22,7 @@ _app.auth().onAuthStateChanged(authUser => {
           ...doc.data(),
           emailVerified: authUser.emailVerified,
           displayName: authUser.displayName,
-          photoURL: authUser.photoURL
+          photoURL: authUser.photoURL,
         }
         console.log(fb.myProfile, 'ssss', authUser)
       })
@@ -54,17 +54,37 @@ const withFirebase = Component => props => (
 
 const RequireLogin = (Component, dest = ROUTES.signup) => props => {
   const {currentUser, setCurrentUser} = CurrentUserGlobal.useContainer()
-
+  const [sendEmailText, setText] = useState('Resend verification link')
   console.log('in require login', currentUser)
-  return currentUser || JSON.parse(localStorage.getItem('currentUser')) ? (
-    currentUser ? (
-      <Component firebase={fb} {...props} />
-    ) : (
-      'Loading '
-    )
-  ) : (
-    <Redirect to={{pathname: dest}} />
-  )
+  if (currentUser || JSON.parse(localStorage.getItem('currentUser'))) {
+    if (currentUser) {
+      if (currentUser.emailVerified) {
+        return <Component firebase={fb} {...props} />
+      } else {
+        return (
+          <div className='verify'>
+            Please verify your email first
+            <button
+              className='btn'
+              onClick={() => {
+                console.log(fb.auth, fb.auth.currentUser)
+
+                fb.auth.currentUser.sendEmailVerification({
+                  url: `https://ehiver.netlify.com`,
+                })
+                setText('Email sent, check your inbox.')
+              }}>
+              {sendEmailText}
+            </button>
+          </div>
+        )
+      }
+    } else {
+      return <div>Loading</div>
+    }
+  } else {
+    return <Redirect to={{pathname: dest}} />
+  }
 }
 
 export {withFirebase, RequireLogin}

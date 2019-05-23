@@ -7,12 +7,12 @@ import HistoryPage from './HistoryPage'
 import {FirebaseDataGlobal} from '../store'
 
 const Sidebar = props => (
-  <div className="sidebar">
+  <div className='sidebar'>
     {[
       {title: 'timeline'},
       {title: 'items', children: ['bought', 'on-shelf', 'sold', 'ongoing']},
       {title: 'profile'},
-      {title: 'settings'}
+      {title: 'settings'},
     ].map(li => (
       <DropDown
         title={li.title}
@@ -61,7 +61,7 @@ const Homepage = props => {
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          tmp.push(doc.data())
+          tmp.push({...doc.data(), id: doc.id})
         })
         console.log('mmmmmmm', tmp)
         setMyItems(tmp)
@@ -70,17 +70,20 @@ const Homepage = props => {
   }, [])
 
   return (
-    <div className="homepage-container">
+    <div className='homepage-container'>
       <Sidebar onClick={setContentType} />
-      <div className="content-panel">
+      <div className='content-panel'>
         <Items
           items={myItems}
           onDelete={id => {
             props.firebase.item(id).delete()
             props.firebase.allItem(id).delete()
-            setMyItems(myItems.filter(item => item.id != id))
+            const tmp = myItems.filter(item => item.id != id)
+            console.log('delete', id, tmp)
+            setMyItems(tmp)
           }}
         />
+        {myItems.length === 0 && <div>No item yet.</div>}
         {/* <HistoryPage firebase={props.firebase} /> */}
       </div>
     </div>

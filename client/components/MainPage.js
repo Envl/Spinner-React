@@ -54,10 +54,18 @@ const MainPage = props => {
 
   async function onRequest(item) {
     let flag = false
+    console.log(props.firebase.auth.currentUser)
+
     if (!props.firebase.auth.currentUser) {
       console.log(',,,,,,,,,,,,,,,,,')
 
       props.history.push(ROUTES.signup)
+      return flag
+    }
+    if (!props.firebase.auth.currentUser.emailVerified) {
+      console.log('not fvvvvvvvvvvv')
+
+      props.history.push(ROUTES.verify)
       return flag
     }
     console.log('................')

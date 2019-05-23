@@ -6,8 +6,9 @@
 
   .logo-top {
     background: url(../assets/img/logo.png) no-repeat;
-    height: 50px;
-    width: 96px;
+    background-size: 143px 27px;
+    height: 27px;
+    width: 143px;
     position: fixed;
     left: 35px;
     top: 10px;
@@ -16,8 +17,11 @@
     width: 80%;
     position: fixed;
     right: 0px;
-    z-index: -1;
+    z-index: -2;
     top: -140px;
+    @include smaller-than(sm) {
+      top: 0px;
+    }
   }
   .text-wrapper {
     margin: 160px 0 0 50px;
@@ -29,7 +33,12 @@
     width: 59%;
     right: 12%;
     position: absolute;
+    z-index: -1;
     top: 5%;
+    @include smaller-than(sm) {
+      width: 45%;
+      top: 8%;
+    }
   }
   .poster-wrapper {
     height: fit-content;

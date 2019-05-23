@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 
-import { RequireLogin } from './firebase'
+import {RequireLogin} from './firebase'
 import '../constants'
-import { ITEM_API, AUTH_API, ROUTES, ALL_ITEM_API } from '../constants'
-import { uploadPictureToFirebase, responseHandler, getId } from '../utilities'
+import {ITEM_API, AUTH_API, ROUTES, ALL_ITEM_API} from '../constants'
+import {uploadPictureToFirebase, responseHandler, getId} from '../utilities'
 import imageCompression from 'browser-image-compression'
-import { SelectedGeoLocationGlobal } from '../store'
+import {SelectedGeoLocationGlobal} from '../store'
 
-const UploadPage = ({ history, firebase }) => {
+const UploadPage = ({history, firebase}) => {
   const [title, setItemTitle] = useState('')
   const [price, setItemPrice] = useState('')
   const [description, setItemDescription] = useState('')
   const [uploadedFiles, setUploadedFiles] = useState([])
   const [submitted, setSubmitted] = useState(false)
   const [uploadCount, setUploadCount] = useState(0)
-  const { selectedGeoLocation } = SelectedGeoLocationGlobal.useContainer()
+  const {selectedGeoLocation} = SelectedGeoLocationGlobal.useContainer()
 
   const handleItemUploadSubmit = event => {
     event.preventDefault()
@@ -34,7 +34,7 @@ const UploadPage = ({ history, firebase }) => {
         photoUrls = _photoUrls
         return fetch(ITEM_API, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             price: parseInt(price),
             title,
@@ -46,7 +46,7 @@ const UploadPage = ({ history, firebase }) => {
         })
       })
       .then(responseHandler)
-      .then(({ message }) => {
+      .then(({message}) => {
         const newItemId = message.match(/(?<=document )[\w]+/)[0]
         console.log(newItemId)
         Promise.all([
@@ -85,7 +85,9 @@ const UploadPage = ({ history, firebase }) => {
     }
     imageCompression(imageFile, options)
       .then(compressedFile => {
-        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`) // smaller than maxSizeMB
+        console.log(
+          `compressedFile size ${compressedFile.size / 1024 / 1024} MB`,
+        ) // smaller than maxSizeMB
         const oldFiles = uploadedFiles.slice()
         setUploadedFiles(oldFiles.concat(compressedFile))
       })
@@ -95,22 +97,45 @@ const UploadPage = ({ history, firebase }) => {
   }
 
   const renderProgress = () => {
-    if (uploadedFiles.length === 0) return <h5>choose a picture to upload</h5>
+    if (uploadedFiles.length === 0)
+      return <span className='progress-text'>Choose a picture to upload</span>
     const filenames = uploadedFiles.map(f => f.name)
     if (submitted) {
       if (uploadedFiles.length.length === uploadCount) {
-        return <h5>almost finished, redirecting to the homepage...</h5>
+        return (
+          <span className='progress-text'>
+            Almost finished, redirecting to the homepage...
+          </span>
+        )
       } else
         return (
-          <h5>{`Uploading.... ${uploadedFiles.length} pictures to upload.. ${uploadCount} done... please wait`}</h5>
+          <span className='progress-text'>{`Uploading.... ${
+            uploadedFiles.length
+          } pictures to upload.. ${uploadCount} done... please wait`}</span>
         )
     } else {
-      return <h5>{`Files to upload: ${filenames.join(', ')}`}</h5>
+      return (
+        <span className='progress-text'>{`Files to upload: ${filenames.join(
+          ', ',
+        )}`}</span>
+      )
     }
   }
 
   return (
     <form className='upload-form' onSubmit={handleItemUploadSubmit}>
+      <label htmlFor='upload-img' id='upload-label'>
+        <i class='far fa-image' />
+        {renderProgress()}
+      </label>
+      <input
+        type='file'
+        name='upload-img'
+        id='upload-img'
+        required
+        onChange={handleImageUpload}
+      />
+
       <input
         type='text'
         name='title'
@@ -140,9 +165,6 @@ const UploadPage = ({ history, firebase }) => {
           setItemDescription(event.target.value)
         }}
       />
-      <input type='file' name='upload-img' id='upload-img' required onChange={handleImageUpload} />
-      <label htmlFor='upload-img' id='upload-label' />
-      {renderProgress()}
       <button type='submit' className='upload-btn btn'>
         Publish
       </button>

@@ -19,65 +19,94 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
       consumer: {points: consumerPoints},
     } = msg
     setShowOptions(false)
-    switch (status) {
-      case 'accepted':
-        console.log(
-          firebase.transaction(id).update({status}) instanceof Promise,
-        )
-        Promise.all([
-          firebase.transaction(id).update({status}),
-          firebase.user(providerId).update({
-            points: providerPoints + price,
-          }),
-          firebase.item(itemId).delete(),
-        ])
-          .then(() => {
-            setPoints(providerPoints + price)
-            SetStatus(status)
-          })
-          .catch(error => {
-            alert('please try again')
-            setShowOptions(true)
-            console.log(error)
-          })
-        break
-      case 'declined':
-        console.log(
-          firebase.transaction(id).update({status}) instanceof Promise,
-        )
-        Promise.all([
-          firebase.transaction(id).update({status}),
-          firebase.user(consumerId).update({
-            points: consumerPoints + price,
-          }),
-        ])
-          .then(() => {
-            SetStatus(status)
-          })
-          .catch(error => {
-            alert('please try again')
-            setShowOptions(true)
-            console.log(error)
-          })
-        break
-      default:
-        console.log('unknown ')
-        break
-    }
+    // 1. get points on firebase
+    firebase
+      .user(consumerId)
+      .get()
+      .then(doc => {
+        switch (status) {
+          case 'accepted':
+            console.log(
+              firebase.transaction(id).update({status}) instanceof Promise,
+            )
+            Promise.all([
+              firebase.transaction(id).update({status}),
+              firebase.user(providerId).update({
+                points: providerPoints + price,
+              }),
+              firebase.item(itemId).delete(),
+            ])
+              .then(() => {
+                // 2. update points
+                setPoints(doc.data().points + price)
+                SetStatus(status)
+              })
+              .catch(error => {
+                alert('please try again')
+                setShowOptions(true)
+                console.log(error)
+              })
+            break
+          case 'declined':
+            console.log(
+              firebase.transaction(id).update({status}) instanceof Promise,
+              'declined----',
+            )
+            // 2. update points
+            Promise.all([
+              firebase.transaction(id).update({status}),
+              firebase.user(consumerId).update({
+                points: doc.data().points + price,
+              }),
+            ])
+              .then(() => {
+                SetStatus(status)
+              })
+              .catch(error => {
+                alert('please try again')
+                setShowOptions(true)
+                console.log(error)
+              })
+
+            break
+          default:
+            console.log('unknown ')
+            break
+        }
+      })
   }
 
   return (
     <div className='msg-item' key={msg.id}>
       <img src={msg.item.photoUrls && msg.item.photoUrls[0]} alt='' />
       <div className='info'>
-        <h3>{msg.item.title}</h3>
+        <h3>
+          {msg.item.title}
+          {myUid === msg.providerId ? (
+            <div className='type-mine'>#My Stuff</div>
+          ) : (
+            <div className='type-others'>#My Request</div>
+          )}
+        </h3>
         <div className='status'>{status}</div>
         <div className='people'>
           {status === 'accepted' &&
             (myUid !== msg.consumerId ? (
-              <a href={`mailto:${msg.consumer.email}`}>{msg.consumer.email}</a>
+              //provider
+              <>
+                <div>Contact to give this stuff away!</div>
+                <a href={`mailto:${msg.consumer.email}`}>
+                  {msg.consumer.email}
+                </a>
+              </>
             ) : (
-              <a href={`mailto:${msg.provider.email}`}>{msg.provider.email}</a>
+              // consumer
+              <>
+                <div>Contact to get this stuff!</div>
+                <a href={`mailto:${msg.provider.email}`}>
+                  {msg.provider.email}
+                </a>
+              </>
             ))}
         </div>
         {//-----Operation Btns ---------------
@@ -94,9 +123,7 @@ const HistoryMsg = ({msg, myUid, firebase}) => {
               Decline
             </button>
           </div>
-        )
-        //---------------------------
-        }
+        )}
       </div>
     </div>
   )
@@ -132,18 +159,18 @@ const HistoryPage = props => {
 
   return (
     <div className='history-page'>
-      {FirebaseData &&
-        FirebaseData.histories &&
-        FirebaseData.histories
-          //  msgs.
-          .map(msg => (
-            <HistoryMsg
-              msg={msg}
-              key={msg.id}
-              myUid={props.firebase.auth.currentUser.uid}
-              firebase={props.firebase}
-            />
-          ))}
+      {FirebaseData && FirebaseData.histories
+        ? FirebaseData.histories
+            //  msgs.
+            .map(msg => (
+              <HistoryMsg
+                msg={msg}
+                key={msg.id}
+                myUid={props.firebase.auth.currentUser.uid}
+                firebase={props.firebase}
+              />
+            ))
+        : 'No transaction yet.'}
     </div>
   )
 }
