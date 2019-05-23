@@ -4,7 +4,7 @@ import App from './app'
 import {
   CurrentUserGlobal,
   FirebaseDataGlobal,
-  SelectedGeoLocationGlobal
+  SelectedGeoLocationGlobal,
 } from './store'
 import './scss/main.scss'
 
@@ -16,5 +16,5 @@ ReactDOM.render(
       </CurrentUserGlobal.Provider>
     </FirebaseDataGlobal.Provider>
   </SelectedGeoLocationGlobal.Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 )
