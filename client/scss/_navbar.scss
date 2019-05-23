@@ -63,6 +63,10 @@
     @include smaller-than(sm) {
       margin: 10px 0 0 10px;
     }
+    @include greater-than(sm) {
+      position: absolute;
+      left: 44%;
+    }
   }
 
   .nav-right {
