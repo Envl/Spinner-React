@@ -19,7 +19,7 @@ const NavBar = ({firebase}) => {
       /* geolocation is available */
       navigator.geolocation.getCurrentPosition(position => {
         const {
-          coords: {latitude, longitude}
+          coords: {latitude, longitude},
         } = position
         setSelectedGeoLocation([latitude, longitude])
         geoLocation
@@ -49,39 +49,42 @@ const NavBar = ({firebase}) => {
   }
 
   return (
-    <nav className="navbar">
-      <div className="nav-up">
-        <div className="nav-left">
-          <button className="nav-location btn">
-            <i className="fas fa-map-marker-alt" />
+    <nav className='navbar'>
+      <div className='nav-up'>
+        <div className='nav-left'>
+          <button className='nav-location btn'>
+            <i className='fas fa-map-marker-alt' />
             {region}
           </button>
-          <button className="nav-search btn">
-            <i className="fas fa-search" />
+          <button className='nav-search btn'>
+            <i className='fas fa-search' />
           </button>
         </div>
-        <Link to={ROUTES.home} className="nav-logo" />
+        <Link to={ROUTES.home} className='nav-logo' />
         {!currentUser && (
-          <div className="nav-right">
+          <div className='nav-right'>
             <Link to={ROUTES.signup}>
-              <button className="btn nav-login">Login/Signup</button>
+              <button className='btn nav-login'>Login/Signup</button>
             </Link>
           </div>
         )}
         {currentUser && (
-          <div className="nav-right">
-            <button className="btn nav-add">
+          <div className='nav-right'>
+            <button className='btn nav-add'>
               <Link to={ROUTES.upload}>
-                <i className="fas fa-plus-circle" />
+                <i className='fas fa-plus-circle' />
               </Link>
             </button>
             <DropDown
               title={
-                <button className="btn nav-user">
-                  <i className="far fa-user" />
+                <button className='btn nav-user'>
+                  <i className='far fa-user' />
                 </button>
               }>
-              <div>{currentUser.points} Honey Muffin</div>
+              <div>
+                <i class='fas fa-coins' />
+                {currentUser.points}{' '}
+              </div>
               <Link to={ROUTES.homepage}>My Stuff</Link>
               <Link to={ROUTES.history}>Transactions</Link>
               <div onClick={handleSignOutClick}>Sign out</div>
@@ -89,7 +92,7 @@ const NavBar = ({firebase}) => {
           </div>
         )}
       </div>
-      <div className="nav-down nav-categories">
+      <div className='nav-down nav-categories'>
         {[
           'furniture',
           'lightning',
@@ -97,7 +100,7 @@ const NavBar = ({firebase}) => {
           'kitchen supplies',
           'bathroom',
           'sports & outdoors',
-          'others'
+          'others',
         ].map((c, i) => (
           <span key={i}>{c}</span>
         ))}
