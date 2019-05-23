@@ -9,7 +9,7 @@ const ItemGrid = ({item, onRequest, onDelete, btnState}) => {
   const {currentUser} = CurrentUserGlobal.useContainer()
   const {title, price, description, photoUrls} = item
 
-  const RequestBtn = onRequest && (
+  const RequestBtn = onRequest && currentUser && (
     <button
       className={
         'btn btn-request ' +
