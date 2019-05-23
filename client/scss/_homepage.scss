@@ -32,4 +32,14 @@
   .content-panel {
     margin: 0 50px 0 0;
   }
+
+  .product-item {
+    .btn-delete {
+      position: absolute;
+      justify-self: flex-end;
+      align-self: center;
+      bottom: 0;
+      background: rgb(223, 112, 112);
+    }
+  }
 }

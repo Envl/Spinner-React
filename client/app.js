@@ -43,7 +43,13 @@ const app = props => {
         <Route
           path={ROUTES.verify}
           render={() => (
-            <h1>A activation link has been sent, please check you Email </h1>
+            <div className='verify-page'>
+              <div>You can close this page now</div>
+              <h1>An activation link has been sent, please check you Email </h1>
+              <div>
+                If you don't receive it in 3 minutes, check the spam box
+              </div>
+            </div>
           )}
         />
         <Route
