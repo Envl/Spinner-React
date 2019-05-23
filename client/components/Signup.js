@@ -36,7 +36,7 @@ const SignUp = props => {
             transactions: [],
 
             items: [],
-            points: 0,
+            points: 100,
           },
           { merge: true },
         )
@@ -77,7 +77,7 @@ const SignUp = props => {
                   id: user.uid,
                   transactions: [],
                   items: [],
-                  points: 0,
+                  points: 100,
                 },
                 { merge: true },
               )
@@ -99,8 +99,6 @@ const SignUp = props => {
       console.log('++++++++++++')
 
       handleSignInSubmit('email')
-    } else if (btnType === 'google') {
-      handleSignInSubmit('google')
     }
   }
 
@@ -155,10 +153,15 @@ const SignUp = props => {
         >
           Sign up now
         </button>
-        <button className='btn-signin-google btn' onClick={() => (btnType = 'google')}>
-          Or sign in with Google
-        </button>
       </form>
+      <button
+        className='btn-signin-google btn'
+        onClick={() => {
+          handleSignInSubmit('google')
+        }}
+      >
+        Or sign in with Google
+      </button>
     </div>
   )
 }
