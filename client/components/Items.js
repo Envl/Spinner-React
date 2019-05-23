@@ -69,7 +69,7 @@ const ItemGrid = ({item, onRequest, onDelete, btnState}) => {
           <a>{title}</a>
         </h2>
         <sup>
-          <i class='fas fa-coins' />
+          <i className='fas fa-coins' />
           {price}
         </sup>
       </div>
