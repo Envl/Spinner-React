@@ -52,6 +52,8 @@ const app = props => {
             </div>
           )}
         />
+
+        <Route path={'/test'} render={localProps => <div>TEST</div>} />
         <Route
           path={ROUTES.landing}
           render={localProps => <LandingPage {...localProps} />}
