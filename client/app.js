@@ -84,4 +84,4 @@ const app = props => {
   )
 }
 
-export default withFirebase(app)
+export default app
